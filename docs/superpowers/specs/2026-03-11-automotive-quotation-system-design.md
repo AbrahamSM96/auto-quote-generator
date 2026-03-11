@@ -124,7 +124,7 @@ The application follows a modern Next.js App Router architecture with Server Com
 ### Development Tools
 
 - **ESLint** - Code linting
-- **Prettier** - Code formatting
+- **oxlint** - Fast linter and code formatter (Rust-based)
 - **TypeScript** - Static type checking
 
 ---
