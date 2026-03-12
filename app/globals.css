@@ -1,26 +1,192 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Dark mode colors - Industrial Precision Theme */
+  --background: #0A0A0A;
+  --foreground: #FAFAFA;
+
+  /* Primary - Red accent */
+  --primary: #EF4444;
+  --primary-hover: #DC2626;
+  --primary-light: #FCA5A5;
+
+  /* Dark surfaces */
+  --dark-bg: #0A0A0A;
+  --dark-surface: #171717;
+  --dark-elevated: #262626;
+  --dark-border: #404040;
+
+  /* Text colors */
+  --text-primary: #FAFAFA;
+  --text-secondary: #A3A3A3;
+  --text-muted: #737373;
+
+  /* Accent colors */
+  --accent-yellow: #FBBF24;
+  --accent-green: #10B981;
+  --accent-blue: #3B82F6;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  /* Colors */
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-light: var(--primary-light);
+
+  --color-dark-bg: var(--dark-bg);
+  --color-dark-surface: var(--dark-surface);
+  --color-dark-elevated: var(--dark-elevated);
+  --color-dark-border: var(--dark-border);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  --color-accent-yellow: var(--accent-yellow);
+  --color-accent-green: var(--accent-green);
+  --color-accent-blue: var(--accent-blue);
+
+  /* Typography */
+  --font-technical: 'JetBrains Mono', monospace;
+  --font-ui: 'Manrope', sans-serif;
+
+  /* Shadows */
+  --shadow-glow: 0 0 20px rgba(239, 68, 68, 0.3);
+  --shadow-glow-sm: 0 0 10px rgba(239, 68, 68, 0.2);
+  --shadow-glow-lg: 0 0 30px rgba(239, 68, 68, 0.4);
+
+  /* Animations */
+  --animate-fade-in: fadeIn 0.3s ease-in-out;
+  --animate-slide-up: slideUp 0.4s ease-out;
+  --animate-scale-in: scaleIn 0.3s ease-out;
+  --animate-glow-pulse: glowPulse 2s ease-in-out infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Base styles */
+* {
+  border-color: var(--dark-border);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--dark-bg);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  font-feature-settings: "kern" 1, "liga" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dark-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--dark-border);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #595959;
+}
+
+/* Selection */
+::selection {
+  background: var(--primary);
+  color: white;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Utility classes */
+.glass-card {
+  background: rgba(23, 23, 23, 0.8);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(64, 64, 64, 0.5);
+}
+
+.focus-ring {
+  outline: none;
+  ring: 2px;
+  ring-color: rgba(239, 68, 68, 0.5);
+  border-color: var(--primary);
+}
+
+.text-gradient {
+  background: linear-gradient(to right, #FAFAFA, #A3A3A3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Number formatting with technical font */
+.font-technical {
+  font-family: var(--font-technical);
+  font-feature-settings: "tnum" 1, "liga" 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Smooth transitions */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Remove transition from inputs for better UX */
+input, select, textarea {
+  transition: none;
+}
+
+/* Grid background pattern for decorative elements */
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(239, 68, 68, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(239, 68, 68, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
 }

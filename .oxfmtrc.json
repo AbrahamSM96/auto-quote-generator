@@ -1,0 +1,26 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 80,
+  "singleQuote": true,
+  "experimentalTailwindcss": {
+    "stylesheet": "./packages/components-base-web/tudn.css",
+    "attributes": ["className"],
+    "functions": ["clsx"],
+    "preserveDuplicates": false,
+    "preserveWhitespace": false
+  },
+  "ignorePatterns": [
+    "**/android/app/**",
+    "**/demo-app/**",
+    "**/public/**",
+    "**/ios/app/**",
+    "**/ios/container/**",
+    "**/ios/README.md",
+    "**/src/persistedQueries/**",
+    "**/next-env.d.ts",
+    "**/jwplayer/jwplayer.js",
+    "**/__generated__/**",
+    "**/generated/**",
+    "**/fastlane/README.md"
+  ]
+}

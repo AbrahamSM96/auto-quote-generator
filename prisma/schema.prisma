@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Quotation {
+  id        String   @id @default(cuid())
+  folio     Int      @unique @default(autoincrement())
+
+  // Client information
+  clientName     String
+  clientPhone    String
+  clientEmail    String
+  clientAddress  String
+
+  // Vehicle information
+  vehicleBrand      String
+  vehicleModel      String
+  vehicleYear       String
+  vehicleColor      String
+  vehiclePlates     String
+  vehiclePaintCode  String
+
+  // Services (array of selected service keys)
+  services          Json   // ["collision", "fullPaint", "bumperRepair", ...]
+  customService     String?  // Custom service description if "other" selected
+
+  // Service details
+  estimatedTime     String  // "2 a 3 Días Hábiles", "1 Semana", etc.
+  piecesToWork      Int     @default(1)
+
+  // Work items (stored as JSON arrays)
+  bodyworkItems  Json   // [{id, description, cost}, ...]
+  paintItems     Json   // [{id, part, quantity, unitPrice, total}, ...]
+  partItems      Json   // [{id, description, cost}, ...]
+
+  // Pricing
+  totalAmount       Decimal @db.Decimal(10, 2)
+  downPayment       Decimal @db.Decimal(10, 2) @default(0)
+  remainingBalance  Decimal @db.Decimal(10, 2)
+
+  // Timestamps
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Indexes for search performance
+  @@index([folio])
+  @@index([clientName])
+  @@index([vehicleBrand])
+  @@index([createdAt])
+}

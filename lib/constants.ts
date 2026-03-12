@@ -1,0 +1,76 @@
+export const SERVICES = [
+  { key: 'collision', label: 'Golpe / Colisión', icon: '💥' },
+  { key: 'fullPaint', label: 'Baño de Pintura', icon: '🎨' },
+  { key: 'panelPaint', label: 'Repintado (Piezas)', icon: '🖌️' },
+  { key: 'pdr', label: 'Varillaje (Granizo)', icon: '🔧' },
+  { key: 'bumperRepair', label: 'Reparación Fascias', icon: '🛡️' },
+  { key: 'polishing', label: 'Pulido / Detailing', icon: '✨' },
+  { key: 'headlightRestoration', label: 'Restauración Faros', icon: '💡' },
+  { key: 'frameRepair', label: 'Banco / Chasis', icon: '⚙️' },
+  { key: 'glassReplacement', label: 'Cambio de Cristal', icon: '🪟' },
+  { key: 'other', label: 'OTRO SERVICIO...', icon: '➕' }
+]
+
+export const ESTIMATED_TIMES = [
+  '1 Día Hábil',
+  '2 a 3 Días Hábiles',
+  '1 Semana',
+  '2 Semanas',
+  'Más de 2 Semanas'
+]
+
+export const VEHICLE_BRANDS = [
+  'Nissan', 'Toyota', 'Honda', 'Mazda', 'Ford', 'Chevrolet',
+  'Volkswagen', 'BMW', 'Mercedes-Benz', 'Audi', 'Hyundai',
+  'Kia', 'Jeep', 'RAM', 'GMC', 'Dodge', 'Chrysler',
+  'Mitsubishi', 'Suzuki', 'Subaru', 'Peugeot', 'Renault',
+  'Seat', 'Fiat', 'Volvo', 'Tesla', 'Otro'
+]
+
+export const UI_TEXT = {
+  buttons: {
+    save: 'Guardar Cotización',
+    update: 'Actualizar Cotización',
+    generatePDF: 'Generar Cotización Profesional',
+    addBodywork: '+ LABOR HOJALATERÍA',
+    addPaint: '+ PIEZA PINTURA',
+    addPart: '+ AGREGAR REPUESTO',
+    newQuotation: '+ Nueva Cotización',
+    edit: 'Editar',
+    delete: 'Eliminar',
+    view: 'Ver',
+    cancel: 'Cancelar',
+    confirm: 'Confirmar',
+    back: 'Volver'
+  },
+  sections: {
+    workshop: 'Perfil del Taller',
+    client: 'Datos del Cliente',
+    vehicle: 'Datos del Vehículo',
+    services: 'Tipo de Servicio y Daño',
+    bodywork: 'Hojalatería',
+    paint: 'Pintura',
+    parts: 'Repuestos y Accesorios'
+  },
+  labels: {
+    folio: 'FOLIO',
+    total: 'TOTAL PRESUPUESTO',
+    downPayment: 'ANTICIPO',
+    balance: 'SALDO PENDIENTE',
+    estimatedTime: 'Tiempo Estimado',
+    piecesToWork: 'Piezas a Intervenir'
+  },
+  placeholders: {
+    clientName: 'Ej. Carlos Eduardo Ramírez López',
+    clientPhone: 'Ej. 3339658258',
+    clientEmail: 'Ej. cliente@email.com',
+    clientAddress: 'Ej. Calle Volcán Popocatépetl No. 513',
+    vehicleModel: 'Ej. Jetta 2019',
+    vehicleColor: 'Ej. Gris Oxford',
+    vehiclePlates: 'Ej. ABC-123',
+    vehiclePaintCode: 'Ej. NH-731P',
+    bodyworkDescription: 'Descripción del trabajo de hojalatería',
+    paintPart: 'Pieza a pintar',
+    partDescription: 'Descripción del repuesto'
+  }
+}
