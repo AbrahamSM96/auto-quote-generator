@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import {prisma} from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 import { quotationSchema } from '@/lib/validations'
 import type { QuotationFormData } from '@/types'
 // import { PrismaClient } from "../../generated/prisma/client";
@@ -42,14 +42,14 @@ export async function createQuotation(data: QuotationFormData) {
         totalAmount: validated.totalAmount,
         downPayment: validated.downPayment,
         remainingBalance: validated.remainingBalance,
-      }
+      },
     })
 
     revalidatePath('/')
     return {
       success: true,
       id: quotation.id,
-      folio: quotation.folio
+      folio: quotation.folio,
     }
   } catch (error) {
     console.error('Error creating quotation:', error)
@@ -63,7 +63,7 @@ export async function createQuotation(data: QuotationFormData) {
 
     return {
       success: false,
-      error: 'Error al crear cotización. Verifica los datos.'
+      error: 'Error al crear cotización. Verifica los datos.',
     }
   }
 }
@@ -95,7 +95,7 @@ export async function updateQuotation(id: string, data: QuotationFormData) {
         totalAmount: validated.totalAmount,
         downPayment: validated.downPayment,
         remainingBalance: validated.remainingBalance,
-      }
+      },
     })
 
     revalidatePath('/')
@@ -105,7 +105,7 @@ export async function updateQuotation(id: string, data: QuotationFormData) {
     console.error('Error updating quotation:', error)
     return {
       success: false,
-      error: 'Error al actualizar cotización'
+      error: 'Error al actualizar cotización',
     }
   }
 }
@@ -119,7 +119,7 @@ export async function deleteQuotation(id: string) {
     console.error('Error deleting quotation:', error)
     return {
       success: false,
-      error: 'Error al eliminar cotización'
+      error: 'Error al eliminar cotización',
     }
   }
 }
@@ -146,7 +146,7 @@ export async function getQuotations() {
         vehicleModel: true,
         totalAmount: true,
         createdAt: true,
-      }
+      },
     })
     return quotations
   } catch (error) {

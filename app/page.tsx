@@ -1,23 +1,23 @@
 import Link from 'next/link'
-import { getQuotations } from './quotations/actions'
 import { QuotationList } from '@/components/quotation/QuotationList'
 import { Button } from '@/components/ui/Button'
+import { getQuotations } from './quotations/actions'
 
 export default async function HomePage() {
   const quotations = await getQuotations()
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-bg to-dark-surface">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto max-w-7xl px-4 py-8">
         {/* Header */}
-        <header className="glass-card rounded-2xl p-8 mb-8 shadow-2xl border border-dark-border/50">
-          <div className="flex items-center justify-between flex-wrap gap-4">
+        <header className="glass-card mb-8 rounded-2xl border border-dark-border/50 p-8 shadow-2xl">
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h1 className="text-4xl font-black tracking-tight text-gradient mb-2">
+              <h1 className="text-gradient mb-2 text-4xl font-black tracking-tight">
                 Sistema de Cotización
               </h1>
-              <p className="text-text-secondary font-medium flex items-center gap-2">
-                <span className="w-8 h-px bg-primary"></span>
+              <p className="flex items-center gap-2 font-medium text-text-secondary">
+                <span className="h-px w-8 bg-primary"></span>
                 Taller Automotriz
               </p>
             </div>

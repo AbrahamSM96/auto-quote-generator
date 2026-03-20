@@ -2,11 +2,15 @@
   "name": "auto-quote-generator",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "format": "oxfmt --write .",
+    "check": "bun run lint:fix && bun run format"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -34,6 +38,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "oxfmt": "^0.41.0",
+    "oxlint": "^1.56.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
@@ -44,6 +50,5 @@
   "trustedDependencies": [
     "sharp",
     "unrs-resolver"
-  ],
-  "type": "module"
+  ]
 }

@@ -5,7 +5,9 @@ export const quotationSchema = z.object({
   clientName: z.string().min(3, 'Nombre debe tener al menos 3 caracteres'),
   clientPhone: z.string().min(10, 'Teléfono debe tener al menos 10 dígitos'),
   clientEmail: z.string().email('Email inválido'),
-  clientAddress: z.string().min(5, 'Dirección debe tener al menos 5 caracteres'),
+  clientAddress: z
+    .string()
+    .min(5, 'Dirección debe tener al menos 5 caracteres'),
 
   // Vehicle info
   vehicleBrand: z.string().min(2, 'Marca requerida'),
@@ -22,30 +24,47 @@ export const quotationSchema = z.object({
   piecesToWork: z.coerce.number().min(1, 'Debe ser al menos 1').int(),
 
   // Items
-  bodyworkItems: z.array(z.object({
-    id: z.string(),
-    description: z.string().min(3, 'Descripción requerida'),
-    cost: z.coerce.number().min(0, 'Costo debe ser mayor o igual a 0')
-  })).default([]),
+  bodyworkItems: z
+    .array(
+      z.object({
+        id: z.string(),
+        description: z.string().min(3, 'Descripción requerida'),
+        cost: z.coerce.number().min(0, 'Costo debe ser mayor o igual a 0'),
+      })
+    )
+    .default([]),
 
-  paintItems: z.array(z.object({
-    id: z.string(),
-    part: z.string().min(2, 'Parte requerida'),
-    quantity: z.coerce.number().min(1, 'Cantidad debe ser al menos 1').int(),
-    unitPrice: z.coerce.number().min(0, 'Precio unitario debe ser mayor o igual a 0'),
-    total: z.coerce.number()
-  })).default([]),
+  paintItems: z
+    .array(
+      z.object({
+        id: z.string(),
+        part: z.string().min(2, 'Parte requerida'),
+        quantity: z.coerce
+          .number()
+          .min(1, 'Cantidad debe ser al menos 1')
+          .int(),
+        unitPrice: z.coerce
+          .number()
+          .min(0, 'Precio unitario debe ser mayor o igual a 0'),
+        total: z.coerce.number(),
+      })
+    )
+    .default([]),
 
-  partItems: z.array(z.object({
-    id: z.string(),
-    description: z.string().min(3, 'Descripción requerida'),
-    cost: z.coerce.number().min(0, 'Costo debe ser mayor o igual a 0')
-  })).default([]),
+  partItems: z
+    .array(
+      z.object({
+        id: z.string(),
+        description: z.string().min(3, 'Descripción requerida'),
+        cost: z.coerce.number().min(0, 'Costo debe ser mayor o igual a 0'),
+      })
+    )
+    .default([]),
 
   // Totals
   totalAmount: z.coerce.number().min(0),
   downPayment: z.coerce.number().min(0),
-  remainingBalance: z.coerce.number()
+  remainingBalance: z.coerce.number(),
 })
 
 export type QuotationFormData = z.infer<typeof quotationSchema>

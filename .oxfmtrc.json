@@ -2,25 +2,28 @@
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "printWidth": 80,
   "singleQuote": true,
+  "trailingComma": "es5",
+  "semi": false,
   "experimentalTailwindcss": {
-    "stylesheet": "./packages/components-base-web/tudn.css",
-    "attributes": ["className"],
-    "functions": ["clsx"],
+    "stylesheet": "./app/globals.css",
+    "attributes": ["className", "class"],
+    "functions": ["clsx", "cn", "cva"],
     "preserveDuplicates": false,
     "preserveWhitespace": false
   },
   "ignorePatterns": [
-    "**/android/app/**",
-    "**/demo-app/**",
-    "**/public/**",
-    "**/ios/app/**",
-    "**/ios/container/**",
-    "**/ios/README.md",
-    "**/src/persistedQueries/**",
-    "**/next-env.d.ts",
-    "**/jwplayer/jwplayer.js",
-    "**/__generated__/**",
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/.git/**",
+    "**/.agents/**",
+    "**/.claude/**",
+    "**/.vscode/**",
     "**/generated/**",
-    "**/fastlane/README.md"
+    "**/prisma/migrations/**",
+    "**/next-env.d.ts",
+    "**/*.min.js"
   ]
 }

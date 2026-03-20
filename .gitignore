@@ -24,6 +24,15 @@
 .DS_Store
 *.pem
 
+# claude code
+.agents/
+.claude/
+.vscode/
+
+# prisma generated
+generated/
+prisma/migrations/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

@@ -1,1 +1,6 @@
-export type { BodyworkItem, PaintItem, PartItem, QuotationFormData } from './quotation'
+export type {
+  BodyworkItem,
+  PaintItem,
+  PartItem,
+  QuotationFormData,
+} from './quotation'

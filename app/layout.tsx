@@ -29,7 +29,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es-MX">
-      <body className={`${jetbrainsMono.variable} ${manrope.variable} font-ui antialiased`}>
+      <body
+        className={`${jetbrainsMono.variable} ${manrope.variable} font-ui antialiased`}
+      >
         {children}
         <Toaster
           theme="dark"
@@ -41,7 +43,7 @@ export default function RootLayout({
               background: '#171717',
               color: '#FAFAFA',
               border: '1px solid #404040',
-            }
+            },
           }}
         />
       </body>

@@ -8,7 +8,7 @@ export const SERVICES = [
   { key: 'headlightRestoration', label: 'Restauración Faros', icon: '💡' },
   { key: 'frameRepair', label: 'Banco / Chasis', icon: '⚙️' },
   { key: 'glassReplacement', label: 'Cambio de Cristal', icon: '🪟' },
-  { key: 'other', label: 'OTRO SERVICIO...', icon: '➕' }
+  { key: 'other', label: 'OTRO SERVICIO...', icon: '➕' },
 ]
 
 export const ESTIMATED_TIMES = [
@@ -16,15 +16,37 @@ export const ESTIMATED_TIMES = [
   '2 a 3 Días Hábiles',
   '1 Semana',
   '2 Semanas',
-  'Más de 2 Semanas'
+  'Más de 2 Semanas',
 ]
 
 export const VEHICLE_BRANDS = [
-  'Nissan', 'Toyota', 'Honda', 'Mazda', 'Ford', 'Chevrolet',
-  'Volkswagen', 'BMW', 'Mercedes-Benz', 'Audi', 'Hyundai',
-  'Kia', 'Jeep', 'RAM', 'GMC', 'Dodge', 'Chrysler',
-  'Mitsubishi', 'Suzuki', 'Subaru', 'Peugeot', 'Renault',
-  'Seat', 'Fiat', 'Volvo', 'Tesla', 'Otro'
+  'Nissan',
+  'Toyota',
+  'Honda',
+  'Mazda',
+  'Ford',
+  'Chevrolet',
+  'Volkswagen',
+  'BMW',
+  'Mercedes-Benz',
+  'Audi',
+  'Hyundai',
+  'Kia',
+  'Jeep',
+  'RAM',
+  'GMC',
+  'Dodge',
+  'Chrysler',
+  'Mitsubishi',
+  'Suzuki',
+  'Subaru',
+  'Peugeot',
+  'Renault',
+  'Seat',
+  'Fiat',
+  'Volvo',
+  'Tesla',
+  'Otro',
 ]
 
 export const UI_TEXT = {
@@ -41,7 +63,7 @@ export const UI_TEXT = {
     view: 'Ver',
     cancel: 'Cancelar',
     confirm: 'Confirmar',
-    back: 'Volver'
+    back: 'Volver',
   },
   sections: {
     workshop: 'Perfil del Taller',
@@ -50,7 +72,7 @@ export const UI_TEXT = {
     services: 'Tipo de Servicio y Daño',
     bodywork: 'Hojalatería',
     paint: 'Pintura',
-    parts: 'Repuestos y Accesorios'
+    parts: 'Repuestos y Accesorios',
   },
   labels: {
     folio: 'FOLIO',
@@ -58,7 +80,7 @@ export const UI_TEXT = {
     downPayment: 'ANTICIPO',
     balance: 'SALDO PENDIENTE',
     estimatedTime: 'Tiempo Estimado',
-    piecesToWork: 'Piezas a Intervenir'
+    piecesToWork: 'Piezas a Intervenir',
   },
   placeholders: {
     clientName: 'Ej. Carlos Eduardo Ramírez López',
@@ -71,6 +93,6 @@ export const UI_TEXT = {
     vehiclePaintCode: 'Ej. NH-731P',
     bodyworkDescription: 'Descripción del trabajo de hojalatería',
     paintPart: 'Pieza a pintar',
-    partDescription: 'Descripción del repuesto'
-  }
+    partDescription: 'Descripción del repuesto',
+  },
 }

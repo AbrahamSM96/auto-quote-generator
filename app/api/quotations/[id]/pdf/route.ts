@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { pdf } from '@react-pdf/renderer'
+import { type NextRequest, NextResponse } from 'next/server'
 import { getQuotation } from '@/app/quotations/actions'
-import { padFolio } from '@/lib/utils'
 import { QuotationPDF } from '@/components/pdf/QuotationPDF'
+import { padFolio } from '@/lib/utils'
 
 export async function GET(
   request: NextRequest,
@@ -22,8 +22,8 @@ export async function GET(
     return new NextResponse(pdfBuffer, {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="Cotizacion-${padFolio(quotation.folio)}.pdf"`
-      }
+        'Content-Disposition': `attachment; filename="Cotizacion-${padFolio(quotation.folio)}.pdf"`,
+      },
     })
   } catch (error) {
     console.error('Error generating PDF:', error)

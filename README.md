@@ -18,10 +18,12 @@ A modern, professional quotation management system for automotive workshops buil
 **Aesthetic**: Industrial Precision - combining technical accuracy with modern sophistication
 
 **Typography**:
+
 - **Technical/Numbers**: JetBrains Mono (for prices, folios, data)
 - **UI/Body**: Manrope (clean, geometric, professional)
 
 **Color Palette**:
+
 - Primary: Bright Red (#EF4444)
 - Background: Almost Black (#0A0A0A)
 - Surfaces: Dark Gray (#171717, #262626)
@@ -125,17 +127,17 @@ export const workshopConfig = {
 
 ## 🛠️ Tech Stack
 
-| Technology | Purpose |
-|------------|---------|
-| **Next.js 16** | React framework (App Router) |
-| **TypeScript** | Type safety |
-| **TailwindCSS v4** | Styling framework |
-| **PostgreSQL** | Relational database |
-| **Prisma** | ORM for database access |
-| **React Hook Form** | Form state management |
-| **Zod** | Schema validation |
-| **@react-pdf/renderer** | PDF generation |
-| **Sonner** | Toast notifications |
+| Technology              | Purpose                      |
+| ----------------------- | ---------------------------- |
+| **Next.js 16**          | React framework (App Router) |
+| **TypeScript**          | Type safety                  |
+| **TailwindCSS v4**      | Styling framework            |
+| **PostgreSQL**          | Relational database          |
+| **Prisma**              | ORM for database access      |
+| **React Hook Form**     | Form state management        |
+| **Zod**                 | Schema validation            |
+| **@react-pdf/renderer** | PDF generation               |
+| **Sonner**              | Toast notifications          |
 
 ## 📝 Development Notes
 

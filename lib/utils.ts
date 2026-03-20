@@ -11,7 +11,7 @@ export function formatCurrency(amount: number | string): string {
     style: 'currency',
     currency: 'MXN',
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    maximumFractionDigits: 2,
   }).format(numAmount)
 }
 
@@ -21,8 +21,10 @@ export function formatDate(date: Date | string): string {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
-  }).format(dateObj).toUpperCase()
+    day: 'numeric',
+  })
+    .format(dateObj)
+    .toUpperCase()
 }
 
 export function formatTime(date: Date | string): string {
@@ -30,7 +32,7 @@ export function formatTime(date: Date | string): string {
   return new Intl.DateTimeFormat('es-MX', {
     hour: '2-digit',
     minute: '2-digit',
-    hour12: true
+    hour12: true,
   }).format(dateObj)
 }
 
@@ -40,7 +42,8 @@ export function padFolio(folio: number): string {
 
 export function calculateTotal(...amounts: (number | string)[]): number {
   return amounts.reduce((sum, amount) => {
-    const num = typeof amount === 'string' ? parseFloat(amount) || 0 : amount || 0
+    const num =
+      typeof amount === 'string' ? parseFloat(amount) || 0 : amount || 0
     return sum + num
   }, 0)
 }

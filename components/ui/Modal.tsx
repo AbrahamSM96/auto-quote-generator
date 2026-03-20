@@ -1,7 +1,7 @@
 'use client'
 
-import { cn } from '@/lib/utils'
 import { useEffect } from 'react'
+import { cn } from '@/lib/utils'
 
 interface ModalProps {
   isOpen: boolean
@@ -26,15 +26,15 @@ export function Modal({ isOpen, onClose, children, className }: ModalProps) {
 
   return (
     <div
-      className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in"
+      className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-black/80 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
         className={cn(
-          'glass-card rounded-2xl p-8 max-w-md w-full mx-4 animate-scale-in border border-dark-border',
+          'glass-card mx-4 w-full max-w-md animate-scale-in rounded-2xl border border-dark-border p-8',
           className
         )}
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         {children}
       </div>
@@ -59,24 +59,25 @@ export function ConfirmModal({
   title,
   message,
   confirmText = 'Confirmar',
-  confirmVariant = 'danger'
+  confirmVariant = 'danger',
 }: ConfirmModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="border-red-500/30">
-      <div className="text-center mb-6">
-        <div className="w-16 h-16 rounded-full bg-red-500/10 mx-auto mb-4 flex items-center justify-center">
+      <div className="mb-6 text-center">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-500/10">
           <span className="text-4xl">⚠️</span>
         </div>
-        <h3 className="text-2xl font-bold text-text-primary mb-2">
-          {title}
-        </h3>
-        <p className="text-text-secondary" dangerouslySetInnerHTML={{ __html: message }} />
+        <h3 className="mb-2 text-2xl font-bold text-text-primary">{title}</h3>
+        <p
+          className="text-text-secondary"
+          dangerouslySetInnerHTML={{ __html: message }}
+        />
       </div>
 
       <div className="flex gap-3">
         <button
           onClick={onClose}
-          className="flex-1 px-6 py-3 bg-dark-elevated border border-dark-border rounded-xl text-text-primary font-medium hover:bg-dark-surface transition-colors"
+          className="flex-1 rounded-xl border border-dark-border bg-dark-elevated px-6 py-3 font-medium text-text-primary transition-colors hover:bg-dark-surface"
         >
           Cancelar
         </button>
@@ -86,10 +87,10 @@ export function ConfirmModal({
             onClose()
           }}
           className={cn(
-            'flex-1 px-6 py-3 rounded-xl text-white font-bold transition-colors',
+            'flex-1 rounded-xl px-6 py-3 font-bold text-white transition-colors',
             confirmVariant === 'danger'
-              ? 'bg-red-600 hover:bg-red-700 shadow-glow-sm'
-              : 'bg-primary hover:bg-primary-hover shadow-glow-sm'
+              ? 'bg-red-600 shadow-glow-sm hover:bg-red-700'
+              : 'bg-primary shadow-glow-sm hover:bg-primary-hover'
           )}
         >
           {confirmText}

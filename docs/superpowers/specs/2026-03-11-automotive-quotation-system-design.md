@@ -104,14 +104,14 @@ The application follows a modern Next.js App Router architecture with Server Com
 
 ### Core Technologies
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| **Next.js** | 16.1.6 | React framework with App Router |
-| **React** | 19.2.3 | UI library |
-| **TypeScript** | 5.x | Type safety |
-| **TailwindCSS** | 4.x | Styling framework |
-| **PostgreSQL** | Latest | Relational database |
-| **Prisma** | Latest | ORM for database access |
+| Technology      | Version | Purpose                         |
+| --------------- | ------- | ------------------------------- |
+| **Next.js**     | 16.1.6  | React framework with App Router |
+| **React**       | 19.2.3  | UI library                      |
+| **TypeScript**  | 5.x     | Type safety                     |
+| **TailwindCSS** | 4.x     | Styling framework               |
+| **PostgreSQL**  | Latest  | Relational database             |
+| **Prisma**      | Latest  | ORM for database access         |
 
 ### Additional Libraries
 
@@ -201,55 +201,55 @@ model Quotation {
 // types/quotation.ts
 
 export type BodyworkItem = {
-  id: string;
-  description: string;
-  cost: number;
+  id: string
+  description: string
+  cost: number
 }
 
 export type PaintItem = {
-  id: string;
-  part: string;
-  quantity: number;
-  unitPrice: number;
-  total: number;
+  id: string
+  part: string
+  quantity: number
+  unitPrice: number
+  total: number
 }
 
 export type PartItem = {
-  id: string;
-  description: string;
-  cost: number;
+  id: string
+  description: string
+  cost: number
 }
 
 export type QuotationFormData = {
   // Client
-  clientName: string;
-  clientPhone: string;
-  clientEmail: string;
-  clientAddress: string;
+  clientName: string
+  clientPhone: string
+  clientEmail: string
+  clientAddress: string
 
   // Vehicle
-  vehicleBrand: string;
-  vehicleModel: string;
-  vehicleYear: string;
-  vehicleColor: string;
-  vehiclePlates: string;
-  vehiclePaintCode: string;
+  vehicleBrand: string
+  vehicleModel: string
+  vehicleYear: string
+  vehicleColor: string
+  vehiclePlates: string
+  vehiclePaintCode: string
 
   // Services
-  services: string[];
-  customService?: string;
-  estimatedTime: string;
-  piecesToWork: number;
+  services: string[]
+  customService?: string
+  estimatedTime: string
+  piecesToWork: number
 
   // Items
-  bodyworkItems: BodyworkItem[];
-  paintItems: PaintItem[];
-  partItems: PartItem[];
+  bodyworkItems: BodyworkItem[]
+  paintItems: PaintItem[]
+  partItems: PartItem[]
 
   // Totals
-  totalAmount: number;
-  downPayment: number;
-  remainingBalance: number;
+  totalAmount: number
+  downPayment: number
+  remainingBalance: number
 }
 ```
 
@@ -347,19 +347,20 @@ auto-quote-generator/
 
 ### Route Structure
 
-| Route | Type | Purpose |
-|-------|------|---------|
-| `/` | Server Component | Quotation list with search |
-| `/quotations/new` | Client Component | Create new quotation |
-| `/quotations/[id]` | Server Component | View quotation details |
-| `/quotations/[id]/edit` | Client Component | Edit existing quotation |
-| `/api/quotations/[id]/pdf` | API Route | Generate and download PDF |
+| Route                      | Type             | Purpose                    |
+| -------------------------- | ---------------- | -------------------------- |
+| `/`                        | Server Component | Quotation list with search |
+| `/quotations/new`          | Client Component | Create new quotation       |
+| `/quotations/[id]`         | Server Component | View quotation details     |
+| `/quotations/[id]/edit`    | Client Component | Edit existing quotation    |
+| `/api/quotations/[id]/pdf` | API Route        | Generate and download PDF  |
 
 ### 1. Homepage - Quotation List (`/`)
 
 **Component:** Server Component (fast, SEO-friendly)
 
 **Features:**
+
 - Table/grid view of all quotations
 - Client-side search (filters by folio, client name, vehicle)
 - Sortable columns
@@ -368,6 +369,7 @@ auto-quote-generator/
 - Empty state when no quotations exist
 
 **Data Loading:**
+
 ```typescript
 export default async function HomePage() {
   const quotations = await getQuotations()
@@ -392,6 +394,7 @@ export default async function HomePage() {
 **Component:** Client Component (requires form interactivity)
 
 **Sections (top to bottom):**
+
 1. Header: Logo, title, folio (auto-generated on save), date/time
 2. Workshop Profile (pre-filled, read-only)
 3. Client Information (4 fields)
@@ -404,6 +407,7 @@ export default async function HomePage() {
 10. Action Buttons (Save, Generate PDF)
 
 **Real-time Calculations:**
+
 - Paint item total = quantity × unitPrice
 - Section totals = sum of all items in section
 - Grand total = bodywork + paint + parts totals
@@ -414,6 +418,7 @@ export default async function HomePage() {
 **Component:** Server Component
 
 **Features:**
+
 - Read-only view of all quotation data
 - Action buttons: Edit, Delete, Generate PDF, Back to List
 - Confirmation dialog for delete action
@@ -423,6 +428,7 @@ export default async function HomePage() {
 **Component:** Client Component
 
 **Features:**
+
 - Identical to New Quotation form
 - Pre-populated with existing data
 - Folio is read-only (cannot change)
@@ -463,6 +469,7 @@ QuotationForm (Client Component)
 ### Key Component Patterns
 
 **Dynamic Row Management:**
+
 ```typescript
 // Uses useFieldArray from React Hook Form
 export function BodyworkSection({ control, register }) {
@@ -493,6 +500,7 @@ export function BodyworkSection({ control, register }) {
 ```
 
 **Real-time Total Calculation:**
+
 ```typescript
 const bodyworkItems = useWatch({ control, name: 'bodyworkItems' })
 const paintItems = useWatch({ control, name: 'paintItems' })
@@ -500,9 +508,18 @@ const partItems = useWatch({ control, name: 'partItems' })
 const downPayment = useWatch({ control, name: 'downPayment' })
 
 useEffect(() => {
-  const bodyworkTotal = bodyworkItems.reduce((sum, item) => sum + Number(item.cost || 0), 0)
-  const paintTotal = paintItems.reduce((sum, item) => sum + Number(item.total || 0), 0)
-  const partsTotal = partItems.reduce((sum, item) => sum + Number(item.cost || 0), 0)
+  const bodyworkTotal = bodyworkItems.reduce(
+    (sum, item) => sum + Number(item.cost || 0),
+    0
+  )
+  const paintTotal = paintItems.reduce(
+    (sum, item) => sum + Number(item.total || 0),
+    0
+  )
+  const partsTotal = partItems.reduce(
+    (sum, item) => sum + Number(item.cost || 0),
+    0
+  )
 
   const total = bodyworkTotal + paintTotal + partsTotal
   const remaining = total - Number(downPayment || 0)
@@ -532,7 +549,7 @@ export async function createQuotation(data: QuotationFormData) {
     const validated = quotationSchema.parse(data)
 
     const quotation = await prisma.quotation.create({
-      data: validated
+      data: validated,
     })
 
     revalidatePath('/')
@@ -546,7 +563,7 @@ export async function updateQuotation(id: string, data: QuotationFormData) {
   try {
     await prisma.quotation.update({
       where: { id },
-      data
+      data,
     })
 
     revalidatePath('/')
@@ -573,7 +590,7 @@ export async function getQuotation(id: string) {
 
 export async function getQuotations() {
   return await prisma.quotation.findMany({
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
   })
 }
 ```
@@ -630,17 +647,21 @@ colors: {
 ```
 
 **Typography:**
+
 - Font: Inter (Google Fonts)
 - Weights: 400, 500, 600, 700, 800
 
 **Key UI Patterns:**
 
 1. **Glassmorphism Cards**
+
    ```tsx
-   className="bg-dark-surface/80 backdrop-blur-xl border border-dark-border/50 rounded-2xl"
+   className =
+     'bg-dark-surface/80 backdrop-blur-xl border border-dark-border/50 rounded-2xl'
    ```
 
 2. **Section Headers with Numbered Badges**
+
    ```tsx
    <div className="bg-gradient-to-r from-dark-elevated to-dark-surface px-6 py-4">
      <div className="w-8 h-8 rounded-lg bg-primary font-bold">1</div>
@@ -649,6 +670,7 @@ colors: {
    ```
 
 3. **Modern Input Fields**
+
    ```tsx
    className="bg-dark-elevated border border-dark-border rounded-xl px-4 py-3.5
               text-text-primary focus:border-primary focus:ring-primary/50"
@@ -661,6 +683,7 @@ colors: {
    ```
 
 **Responsive Design:**
+
 - Mobile-first approach
 - Grid layouts that stack on mobile
 - Breakpoints: `sm:640px`, `md:768px`, `lg:1024px`, `xl:1280px`
@@ -691,29 +714,41 @@ export const quotationSchema = z.object({
   estimatedTime: z.string().min(1, 'Tiempo estimado requerido'),
   piecesToWork: z.number().min(1).int(),
 
-  bodyworkItems: z.array(z.object({
-    id: z.string(),
-    description: z.string().min(3),
-    cost: z.number().min(0)
-  })).default([]),
+  bodyworkItems: z
+    .array(
+      z.object({
+        id: z.string(),
+        description: z.string().min(3),
+        cost: z.number().min(0),
+      })
+    )
+    .default([]),
 
-  paintItems: z.array(z.object({
-    id: z.string(),
-    part: z.string().min(2),
-    quantity: z.number().min(1).int(),
-    unitPrice: z.number().min(0),
-    total: z.number()
-  })).default([]),
+  paintItems: z
+    .array(
+      z.object({
+        id: z.string(),
+        part: z.string().min(2),
+        quantity: z.number().min(1).int(),
+        unitPrice: z.number().min(0),
+        total: z.number(),
+      })
+    )
+    .default([]),
 
-  partItems: z.array(z.object({
-    id: z.string(),
-    description: z.string().min(3),
-    cost: z.number().min(0)
-  })).default([]),
+  partItems: z
+    .array(
+      z.object({
+        id: z.string(),
+        description: z.string().min(3),
+        cost: z.number().min(0),
+      })
+    )
+    .default([]),
 
   totalAmount: z.number().min(0),
   downPayment: z.number().min(0),
-  remainingBalance: z.number()
+  remainingBalance: z.number(),
 })
 ```
 
@@ -750,12 +785,12 @@ Return as downloadable file (Cotizacion-003.pdf)
 ```tsx
 <Document>
   <Page size="A4">
-    <PDFHeader />           {/* Logo, workshop info, folio, date */}
-    <PDFClientSection />    {/* Client details */}
-    <PDFVehicleSection />   {/* Vehicle details */}
-    <PDFServicesSection />  {/* Selected services as badges */}
-    <PDFItemsTable />       {/* Bodywork, Paint, Parts breakdown */}
-    <PDFFooter />           {/* Total, Down Payment, Balance */}
+    <PDFHeader /> {/* Logo, workshop info, folio, date */}
+    <PDFClientSection /> {/* Client details */}
+    <PDFVehicleSection /> {/* Vehicle details */}
+    <PDFServicesSection /> {/* Selected services as badges */}
+    <PDFItemsTable /> {/* Bodywork, Paint, Parts breakdown */}
+    <PDFFooter /> {/* Total, Down Payment, Balance */}
   </Page>
 </Document>
 ```
@@ -812,6 +847,7 @@ FACEBOOK_CLIENT_SECRET=""
 ### Phase 2: Authentication & Multi-User
 
 **Features:**
+
 - NextAuth integration
 - Google OAuth login
 - Facebook OAuth login
@@ -819,6 +855,7 @@ FACEBOOK_CLIENT_SECRET=""
 - Protected routes
 
 **Database Changes:**
+
 ```prisma
 model User {
   id            String    @id @default(cuid())
@@ -847,6 +884,7 @@ model Quotation {
 ### Phase 3: Admin Panel
 
 **Features:**
+
 - User management (view, edit, delete users)
 - Workshop settings UI (edit logo, name, contact info)
 - View all quotations (not just own)
@@ -856,6 +894,7 @@ model Quotation {
 ### Phase 4: Advanced Features
 
 **Potential additions:**
+
 - Email quotations to clients
 - WhatsApp integration
 - Quotation templates
@@ -871,16 +910,19 @@ model Quotation {
 ## Testing Strategy
 
 ### Unit Tests
+
 - Form validation functions
 - Currency/date formatting utilities
 - Total calculation logic
 
 ### Integration Tests
+
 - Server Actions (CRUD operations)
 - PDF generation
 - Form submission flow
 
 ### E2E Tests
+
 - Create quotation flow
 - Edit quotation flow
 - Delete quotation flow
@@ -937,7 +979,7 @@ export const UI_TEXT = {
     delete: 'Eliminar',
     view: 'Ver',
     cancel: 'Cancelar',
-    confirm: 'Confirmar'
+    confirm: 'Confirmar',
   },
   sections: {
     workshop: 'Perfil del Taller',
@@ -946,14 +988,14 @@ export const UI_TEXT = {
     services: 'Tipo de Servicio y Daño',
     bodywork: 'Hojalatería',
     paint: 'Pintura',
-    parts: 'Repuestos y Accesorios'
+    parts: 'Repuestos y Accesorios',
   },
   labels: {
     folio: 'FOLIO',
     total: 'TOTAL PRESUPUESTO',
     downPayment: 'ANTICIPO',
-    balance: 'SALDO PENDIENTE'
-  }
+    balance: 'SALDO PENDIENTE',
+  },
 }
 
 export const SERVICES = [
@@ -966,7 +1008,7 @@ export const SERVICES = [
   { key: 'headlightRestoration', label: 'Restauración Faros' },
   { key: 'frameRepair', label: 'Banco / Chasis' },
   { key: 'glassReplacement', label: 'Cambio de Cristal' },
-  { key: 'other', label: 'OTRO SERVICIO...' }
+  { key: 'other', label: 'OTRO SERVICIO...' },
 ]
 
 export const ESTIMATED_TIMES = [
@@ -974,7 +1016,7 @@ export const ESTIMATED_TIMES = [
   '2 a 3 Días Hábiles',
   '1 Semana',
   '2 Semanas',
-  'Más de 2 Semanas'
+  'Más de 2 Semanas',
 ]
 ```
 
@@ -987,7 +1029,7 @@ export function formatCurrency(amount: number): string {
   return new Intl.NumberFormat('es-MX', {
     style: 'currency',
     currency: 'MXN',
-    minimumFractionDigits: 2
+    minimumFractionDigits: 2,
   }).format(amount)
 }
 
@@ -996,15 +1038,17 @@ export function formatDate(date: Date): string {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
-  }).format(date).toUpperCase()
+    day: 'numeric',
+  })
+    .format(date)
+    .toUpperCase()
 }
 
 export function formatTime(date: Date): string {
   return new Intl.DateTimeFormat('es-MX', {
     hour: '2-digit',
     minute: '2-digit',
-    hour12: true
+    hour12: true,
   }).format(date)
 }
 

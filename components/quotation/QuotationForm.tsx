@@ -1,20 +1,25 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { useForm, useWatch, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
-import { quotationSchema } from '@/lib/validations'
 import { createQuotation, updateQuotation } from '@/app/quotations/actions'
-import { formatDate, formatTime, padFolio } from '@/lib/utils'
 import { workshopConfig } from '@/config/workshop'
-import { SERVICES, ESTIMATED_TIMES, VEHICLE_BRANDS, UI_TEXT } from '@/lib/constants'
-import type { QuotationFormData, BodyworkItem, PaintItem, PartItem } from '@/types'
+import {
+  ESTIMATED_TIMES,
+  SERVICES,
+  UI_TEXT,
+  VEHICLE_BRANDS,
+} from '@/lib/constants'
+import { formatDate, formatTime, padFolio } from '@/lib/utils'
+import { quotationSchema } from '@/lib/validations'
+import type { QuotationFormData } from '@/types'
 import { Button } from '../ui/Button'
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card'
 import { Input } from '../ui/Input'
 import { Select } from '../ui/Select'
-import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card'
 
 interface QuotationFormProps {
   mode: 'create' | 'edit'
@@ -30,7 +35,7 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
     handleSubmit,
     control,
     setValue,
-    formState: { errors, isSubmitting }
+    formState: { errors, isSubmitting },
   } = useForm<QuotationFormData>({
     resolver: zodResolver(quotationSchema),
     defaultValues: initialData || {
@@ -53,24 +58,36 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
       partItems: [],
       totalAmount: 0,
       downPayment: 0,
-      remainingBalance: 0
-    }
+      remainingBalance: 0,
+    },
   })
 
   // Field arrays for dynamic sections
-  const { fields: bodyworkFields, append: appendBodywork, remove: removeBodywork } = useFieldArray({
+  const {
+    fields: bodyworkFields,
+    append: appendBodywork,
+    remove: removeBodywork,
+  } = useFieldArray({
     control,
-    name: 'bodyworkItems'
+    name: 'bodyworkItems',
   })
 
-  const { fields: paintFields, append: appendPaint, remove: removePaint } = useFieldArray({
+  const {
+    fields: paintFields,
+    append: appendPaint,
+    remove: removePaint,
+  } = useFieldArray({
     control,
-    name: 'paintItems'
+    name: 'paintItems',
   })
 
-  const { fields: partFields, append: appendPart, remove: removePart } = useFieldArray({
+  const {
+    fields: partFields,
+    append: appendPart,
+    remove: removePart,
+  } = useFieldArray({
     control,
-    name: 'partItems'
+    name: 'partItems',
   })
 
   // Watch for changes to calculate totals
@@ -82,9 +99,18 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
 
   // Real-time total calculations
   useEffect(() => {
-    const bodyworkTotal = (bodyworkItems || []).reduce((sum, item) => sum + Number(item?.cost || 0), 0)
-    const paintTotal = (paintItems || []).reduce((sum, item) => sum + Number(item?.total || 0), 0)
-    const partsTotal = (partItems || []).reduce((sum, item) => sum + Number(item?.cost || 0), 0)
+    const bodyworkTotal = (bodyworkItems || []).reduce(
+      (sum, item) => sum + Number(item?.cost || 0),
+      0
+    )
+    const paintTotal = (paintItems || []).reduce(
+      (sum, item) => sum + Number(item?.total || 0),
+      0
+    )
+    const partsTotal = (partItems || []).reduce(
+      (sum, item) => sum + Number(item?.cost || 0),
+      0
+    )
 
     const total = bodyworkTotal + paintTotal + partsTotal
     const remaining = total - Number(downPayment || 0)
@@ -104,9 +130,10 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
   }, [paintItems, setValue])
 
   const onSubmit = async (data: QuotationFormData) => {
-    const result = mode === 'create'
-      ? await createQuotation(data)
-      : await updateQuotation(initialData.id, data)
+    const result =
+      mode === 'create'
+        ? await createQuotation(data)
+        : await updateQuotation(initialData.id, data)
 
     if (result.success) {
       toast.success(
@@ -123,7 +150,7 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
   const toggleService = (serviceKey: string) => {
     const current = services || []
     const updated = current.includes(serviceKey)
-      ? current.filter(s => s !== serviceKey)
+      ? current.filter((s) => s !== serviceKey)
       : [...current, serviceKey]
     setValue('services', updated)
   }
@@ -131,34 +158,40 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* Header */}
-      <header className="glass-card rounded-2xl p-8 shadow-2xl border border-dark-border/50">
-        <div className="flex items-center justify-between flex-wrap gap-4">
+      <header className="glass-card rounded-2xl border border-dark-border/50 p-8 shadow-2xl">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-6">
             <div className="relative">
-              <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full" />
-              <div className="relative z-10 w-24 h-24 rounded-full bg-dark-elevated border-2 border-primary/30 flex items-center justify-center">
+              <div className="absolute inset-0 rounded-full bg-primary/20 blur-2xl" />
+              <div className="relative z-10 flex h-24 w-24 items-center justify-center rounded-full border-2 border-primary/30 bg-dark-elevated">
                 <span className="text-4xl">🔧</span>
               </div>
             </div>
             <div>
-              <h1 className="text-4xl font-black tracking-tight text-gradient">
+              <h1 className="text-gradient text-4xl font-black tracking-tight">
                 {workshopConfig.name}
               </h1>
-              <p className="text-primary font-semibold tracking-wider mt-1 flex items-center gap-2">
-                <span className="w-8 h-px bg-primary"></span>
+              <p className="mt-1 flex items-center gap-2 font-semibold tracking-wider text-primary">
+                <span className="h-px w-8 bg-primary"></span>
                 {workshopConfig.subtitle}
               </p>
             </div>
           </div>
           <div className="text-right">
-            <div className="inline-flex items-center gap-3 bg-dark-elevated px-6 py-3 rounded-xl mb-3 border border-dark-border/50">
-              <span className="text-text-secondary text-sm font-medium">FOLIO</span>
-              <span className="text-primary font-black text-3xl font-technical">
+            <div className="mb-3 inline-flex items-center gap-3 rounded-xl border border-dark-border/50 bg-dark-elevated px-6 py-3">
+              <span className="text-sm font-medium text-text-secondary">
+                FOLIO
+              </span>
+              <span className="font-technical text-3xl font-black text-primary">
                 {mode === 'edit' ? padFolio(initialData?.folio || 0) : '---'}
               </span>
             </div>
-            <p className="text-xl font-bold text-text-primary font-technical">{formatTime(now)}</p>
-            <p className="text-text-secondary text-sm mt-1">{formatDate(now)}</p>
+            <p className="font-technical text-xl font-bold text-text-primary">
+              {formatTime(now)}
+            </p>
+            <p className="mt-1 text-sm text-text-secondary">
+              {formatDate(now)}
+            </p>
           </div>
         </div>
       </header>
@@ -166,39 +199,55 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
       {/* Workshop Profile (read-only) */}
       <Card>
         <CardHeader>
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
             <span className="text-2xl">🏢</span>
           </div>
           <CardTitle>{UI_TEXT.sections.workshop}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <p className="text-text-secondary text-sm uppercase tracking-wide">Encargado</p>
-              <p className="text-text-primary font-medium">{workshopConfig.manager}</p>
+              <p className="text-sm tracking-wide text-text-secondary uppercase">
+                Encargado
+              </p>
+              <p className="font-medium text-text-primary">
+                {workshopConfig.manager}
+              </p>
             </div>
             <div className="space-y-2">
-              <p className="text-text-secondary text-sm uppercase tracking-wide">Teléfono</p>
-              <p className="text-text-primary font-medium font-technical">{workshopConfig.phone}</p>
+              <p className="text-sm tracking-wide text-text-secondary uppercase">
+                Teléfono
+              </p>
+              <p className="font-technical font-medium text-text-primary">
+                {workshopConfig.phone}
+              </p>
             </div>
             <div className="space-y-2">
-              <p className="text-text-secondary text-sm uppercase tracking-wide">Email</p>
-              <p className="text-text-primary font-medium">{workshopConfig.email}</p>
+              <p className="text-sm tracking-wide text-text-secondary uppercase">
+                Email
+              </p>
+              <p className="font-medium text-text-primary">
+                {workshopConfig.email}
+              </p>
             </div>
             <div className="space-y-2">
-              <p className="text-text-secondary text-sm uppercase tracking-wide">Dirección</p>
-              <p className="text-text-primary font-medium">{workshopConfig.address}</p>
+              <p className="text-sm tracking-wide text-text-secondary uppercase">
+                Dirección
+              </p>
+              <p className="font-medium text-text-primary">
+                {workshopConfig.address}
+              </p>
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Client and Vehicle Info */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Client */}
         <Card>
           <CardHeader>
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
               <span className="text-2xl">👤</span>
             </div>
             <CardTitle>{UI_TEXT.sections.client}</CardTitle>
@@ -235,7 +284,7 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
         {/* Vehicle */}
         <Card>
           <CardHeader>
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
               <span className="text-2xl">🚗</span>
             </div>
             <CardTitle>{UI_TEXT.sections.vehicle}</CardTitle>
@@ -247,7 +296,10 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
               error={errors.vehicleBrand?.message}
               options={[
                 { value: '', label: 'Seleccionar marca...' },
-                ...VEHICLE_BRANDS.map(brand => ({ value: brand, label: brand }))
+                ...VEHICLE_BRANDS.map((brand) => ({
+                  value: brand,
+                  label: brand,
+                })),
               ]}
             />
             <Input
@@ -291,25 +343,23 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
       {/* Services */}
       <Card>
         <CardHeader>
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
             <span className="text-2xl">✅</span>
           </div>
           <CardTitle>{UI_TEXT.sections.services}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
-            {SERVICES.map(service => (
+          <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {SERVICES.map((service) => (
               <button
                 key={service.key}
                 type="button"
                 onClick={() => toggleService(service.key)}
-                className={`
-                  px-5 py-4 rounded-xl font-medium transition-all duration-200
-                  ${(services || []).includes(service.key)
-                    ? 'bg-primary text-white shadow-glow-sm scale-[1.02]'
-                    : 'bg-dark-elevated text-text-secondary border border-dark-border hover:border-primary/50 hover:text-text-primary'
-                  }
-                `}
+                className={`rounded-xl px-5 py-4 font-medium transition-all duration-200 ${
+                  (services || []).includes(service.key)
+                    ? 'scale-[1.02] bg-primary text-white shadow-glow-sm'
+                    : 'border border-dark-border bg-dark-elevated text-text-secondary hover:border-primary/50 hover:text-text-primary'
+                } `}
               >
                 <span className="mr-2">{service.icon}</span>
                 {service.label}
@@ -317,7 +367,7 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
             ))}
           </div>
           {errors.services && (
-            <p className="text-red-400 text-sm flex items-center gap-2">
+            <p className="flex items-center gap-2 text-sm text-red-400">
               <span>⚠️</span>
               {errors.services.message}
             </p>
@@ -329,11 +379,14 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
               placeholder="Describe el servicio personalizado..."
             />
           )}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <Select
               label={UI_TEXT.labels.estimatedTime}
               {...register('estimatedTime')}
-              options={ESTIMATED_TIMES.map(time => ({ value: time, label: time }))}
+              options={ESTIMATED_TIMES.map((time) => ({
+                value: time,
+                label: time,
+              }))}
             />
             <Input
               label={UI_TEXT.labels.piecesToWork}
@@ -346,24 +399,30 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
       </Card>
 
       {/* Bodywork Section */}
-      <div className="glass-card rounded-2xl overflow-hidden">
-        <div className="bg-gradient-to-r from-dark-elevated to-dark-surface px-6 py-4 flex items-center justify-between border-b border-dark-border/50">
+      <div className="glass-card overflow-hidden rounded-2xl">
+        <div className="flex items-center justify-between border-b border-dark-border/50 bg-gradient-to-r from-dark-elevated to-dark-surface px-6 py-4">
           <div className="flex items-center gap-4">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center font-bold text-white">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary font-bold text-white">
               1
             </div>
-            <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
+            <h3 className="flex items-center gap-2 text-lg font-bold text-text-primary">
               <span className="text-xl">🔨</span>
               {UI_TEXT.sections.bodywork.toUpperCase()}
             </h3>
           </div>
-          <span className="text-2xl font-bold text-primary font-technical">
-            ${((bodyworkItems || []).reduce((sum, item) => sum + Number(item?.cost || 0), 0)).toFixed(2)}
+          <span className="font-technical text-2xl font-bold text-primary">
+            $
+            {(bodyworkItems || [])
+              .reduce((sum, item) => sum + Number(item?.cost || 0), 0)
+              .toFixed(2)}
           </span>
         </div>
-        <div className="p-6 space-y-3">
+        <div className="space-y-3 p-6">
           {bodyworkFields.map((field, index) => (
-            <div key={field.id} className="flex items-center gap-3 p-4 bg-dark-elevated rounded-xl border border-dark-border/50 hover:border-primary/30 transition-colors group">
+            <div
+              key={field.id}
+              className="group flex items-center gap-3 rounded-xl border border-dark-border/50 bg-dark-elevated p-4 transition-colors hover:border-primary/30"
+            >
               <Input
                 {...register(`bodyworkItems.${index}.description`)}
                 placeholder={UI_TEXT.placeholders.bodyworkDescription}
@@ -375,13 +434,13 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
                 type="number"
                 step="0.01"
                 placeholder="$0.00"
-                className="w-32 font-technical text-right"
+                className="w-32 text-right font-technical"
                 error={errors.bodyworkItems?.[index]?.cost?.message}
               />
               <button
                 type="button"
                 onClick={() => removeBodywork(index)}
-                className="w-10 h-10 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors opacity-0 group-hover:opacity-100"
+                className="h-10 w-10 rounded-lg bg-red-500/10 text-red-400 opacity-0 transition-colors group-hover:opacity-100 hover:bg-red-500/20"
               >
                 ×
               </button>
@@ -389,8 +448,14 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
           ))}
           <button
             type="button"
-            onClick={() => appendBodywork({ id: crypto.randomUUID(), description: '', cost: 0 })}
-            className="w-full py-4 border-2 border-dashed border-dark-border rounded-xl text-text-secondary hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-200 font-medium"
+            onClick={() =>
+              appendBodywork({
+                id: crypto.randomUUID(),
+                description: '',
+                cost: 0,
+              })
+            }
+            className="w-full rounded-xl border-2 border-dashed border-dark-border py-4 font-medium text-text-secondary transition-all duration-200 hover:border-primary hover:bg-primary/5 hover:text-primary"
           >
             {UI_TEXT.buttons.addBodywork}
           </button>
@@ -398,24 +463,30 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
       </div>
 
       {/* Paint Section */}
-      <div className="glass-card rounded-2xl overflow-hidden">
-        <div className="bg-gradient-to-r from-dark-elevated to-dark-surface px-6 py-4 flex items-center justify-between border-b border-dark-border/50">
+      <div className="glass-card overflow-hidden rounded-2xl">
+        <div className="flex items-center justify-between border-b border-dark-border/50 bg-gradient-to-r from-dark-elevated to-dark-surface px-6 py-4">
           <div className="flex items-center gap-4">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center font-bold text-white">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary font-bold text-white">
               2
             </div>
-            <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
+            <h3 className="flex items-center gap-2 text-lg font-bold text-text-primary">
               <span className="text-xl">🎨</span>
               {UI_TEXT.sections.paint.toUpperCase()}
             </h3>
           </div>
-          <span className="text-2xl font-bold text-primary font-technical">
-            ${((paintItems || []).reduce((sum, item) => sum + Number(item?.total || 0), 0)).toFixed(2)}
+          <span className="font-technical text-2xl font-bold text-primary">
+            $
+            {(paintItems || [])
+              .reduce((sum, item) => sum + Number(item?.total || 0), 0)
+              .toFixed(2)}
           </span>
         </div>
-        <div className="p-6 space-y-3">
+        <div className="space-y-3 p-6">
           {paintFields.map((field, index) => (
-            <div key={field.id} className="flex items-center gap-3 p-4 bg-dark-elevated rounded-xl border border-dark-border/50 hover:border-primary/30 transition-colors group">
+            <div
+              key={field.id}
+              className="group flex items-center gap-3 rounded-xl border border-dark-border/50 bg-dark-elevated p-4 transition-colors hover:border-primary/30"
+            >
               <Input
                 {...register(`paintItems.${index}.part`)}
                 placeholder={UI_TEXT.placeholders.paintPart}
@@ -426,7 +497,7 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
                 {...register(`paintItems.${index}.quantity`)}
                 type="number"
                 placeholder="Cant."
-                className="w-20 font-technical text-center"
+                className="w-20 text-center font-technical"
                 error={errors.paintItems?.[index]?.quantity?.message}
               />
               <Input
@@ -434,7 +505,7 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
                 type="number"
                 step="0.01"
                 placeholder="P. Unit."
-                className="w-28 font-technical text-right"
+                className="w-28 text-right font-technical"
                 error={errors.paintItems?.[index]?.unitPrice?.message}
               />
               <Input
@@ -442,13 +513,13 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
                 type="number"
                 step="0.01"
                 placeholder="$0.00"
-                className="w-32 font-technical text-right bg-dark-bg"
+                className="w-32 bg-dark-bg text-right font-technical"
                 readOnly
               />
               <button
                 type="button"
                 onClick={() => removePaint(index)}
-                className="w-10 h-10 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors opacity-0 group-hover:opacity-100"
+                className="h-10 w-10 rounded-lg bg-red-500/10 text-red-400 opacity-0 transition-colors group-hover:opacity-100 hover:bg-red-500/20"
               >
                 ×
               </button>
@@ -456,8 +527,16 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
           ))}
           <button
             type="button"
-            onClick={() => appendPaint({ id: crypto.randomUUID(), part: '', quantity: 1, unitPrice: 0, total: 0 })}
-            className="w-full py-4 border-2 border-dashed border-dark-border rounded-xl text-text-secondary hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-200 font-medium"
+            onClick={() =>
+              appendPaint({
+                id: crypto.randomUUID(),
+                part: '',
+                quantity: 1,
+                unitPrice: 0,
+                total: 0,
+              })
+            }
+            className="w-full rounded-xl border-2 border-dashed border-dark-border py-4 font-medium text-text-secondary transition-all duration-200 hover:border-primary hover:bg-primary/5 hover:text-primary"
           >
             {UI_TEXT.buttons.addPaint}
           </button>
@@ -465,24 +544,30 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
       </div>
 
       {/* Parts Section */}
-      <div className="glass-card rounded-2xl overflow-hidden">
-        <div className="bg-gradient-to-r from-dark-elevated to-dark-surface px-6 py-4 flex items-center justify-between border-b border-dark-border/50">
+      <div className="glass-card overflow-hidden rounded-2xl">
+        <div className="flex items-center justify-between border-b border-dark-border/50 bg-gradient-to-r from-dark-elevated to-dark-surface px-6 py-4">
           <div className="flex items-center gap-4">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center font-bold text-white">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary font-bold text-white">
               3
             </div>
-            <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
+            <h3 className="flex items-center gap-2 text-lg font-bold text-text-primary uppercase">
               <span className="text-xl">💡</span>
-              {UI_TEXT.sections.parts.toUpperCase()}
+              {UI_TEXT.sections.parts}
             </h3>
           </div>
-          <span className="text-2xl font-bold text-primary font-technical">
-            ${((partItems || []).reduce((sum, item) => sum + Number(item?.cost || 0), 0)).toFixed(2)}
+          <span className="font-technical text-2xl font-bold text-primary">
+            $
+            {(partItems || [])
+              .reduce((sum, item) => sum + Number(item?.cost || 0), 0)
+              .toFixed(2)}
           </span>
         </div>
-        <div className="p-6 space-y-3">
+        <div className="space-y-3 p-6">
           {partFields.map((field, index) => (
-            <div key={field.id} className="flex items-center gap-3 p-4 bg-dark-elevated rounded-xl border border-dark-border/50 hover:border-primary/30 transition-colors group">
+            <div
+              key={field.id}
+              className="group flex items-center gap-3 rounded-xl border border-dark-border/50 bg-dark-elevated p-4 transition-colors hover:border-primary/30"
+            >
               <Input
                 {...register(`partItems.${index}.description`)}
                 placeholder={UI_TEXT.placeholders.partDescription}
@@ -494,13 +579,13 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
                 type="number"
                 step="0.01"
                 placeholder="$0.00"
-                className="w-32 font-technical text-right"
+                className="w-32 text-right font-technical"
                 error={errors.partItems?.[index]?.cost?.message}
               />
               <button
                 type="button"
                 onClick={() => removePart(index)}
-                className="w-10 h-10 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors opacity-0 group-hover:opacity-100"
+                className="h-10 w-10 rounded-lg bg-red-500/10 text-red-400 opacity-0 transition-colors group-hover:opacity-100 hover:bg-red-500/20"
               >
                 ×
               </button>
@@ -508,8 +593,10 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
           ))}
           <button
             type="button"
-            onClick={() => appendPart({ id: crypto.randomUUID(), description: '', cost: 0 })}
-            className="w-full py-4 border-2 border-dashed border-dark-border rounded-xl text-text-secondary hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-200 font-medium"
+            onClick={() =>
+              appendPart({ id: crypto.randomUUID(), description: '', cost: 0 })
+            }
+            className="w-full rounded-xl border-2 border-dashed border-dark-border py-4 font-medium text-text-secondary transition-all duration-200 hover:border-primary hover:bg-primary/5 hover:text-primary"
           >
             {UI_TEXT.buttons.addPart}
           </button>
@@ -517,34 +604,40 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
       </div>
 
       {/* Totals Section */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-dark-elevated via-dark-surface to-dark-elevated p-8 border border-dark-border/50 shadow-2xl">
-        <div className="absolute inset-0 grid-pattern opacity-5" />
-        <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+      <div className="relative overflow-hidden rounded-2xl border border-dark-border/50 bg-gradient-to-br from-dark-elevated via-dark-surface to-dark-elevated p-8 shadow-2xl">
+        <div className="grid-pattern absolute inset-0 opacity-5" />
+        <div className="relative z-10 grid grid-cols-1 gap-6 text-center md:grid-cols-3">
           <div className="space-y-2">
-            <p className="text-text-secondary text-xs uppercase tracking-wider font-medium">
+            <p className="text-xs font-medium tracking-wider text-text-secondary uppercase">
               {UI_TEXT.labels.total}
             </p>
-            <p className="text-text-primary text-4xl font-black font-technical">
-              ${Number(useWatch({ control, name: 'totalAmount' }) || 0).toFixed(2)}
+            <p className="font-technical text-4xl font-black text-text-primary">
+              $
+              {Number(useWatch({ control, name: 'totalAmount' }) || 0).toFixed(
+                2
+              )}
             </p>
           </div>
           <div className="space-y-2">
-            <p className="text-text-secondary text-xs uppercase tracking-wider font-medium">
+            <p className="text-xs font-medium tracking-wider text-text-secondary uppercase">
               {UI_TEXT.labels.downPayment}
             </p>
             <input
               {...register('downPayment')}
               type="number"
               step="0.01"
-              className="w-full text-center text-3xl font-bold font-technical bg-dark-bg border-2 border-primary/30 rounded-xl py-3 text-text-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-xl border-2 border-primary/30 bg-dark-bg py-3 text-center font-technical text-3xl font-bold text-text-primary focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
             />
           </div>
           <div className="space-y-2">
-            <p className="text-text-secondary text-xs uppercase tracking-wider font-medium">
+            <p className="text-xs font-medium tracking-wider text-text-secondary uppercase">
               {UI_TEXT.labels.balance}
             </p>
-            <p className="text-accent-yellow text-4xl font-black font-technical drop-shadow-glow">
-              ${Number(useWatch({ control, name: 'remainingBalance' }) || 0).toFixed(2)}
+            <p className="drop-shadow-glow font-technical text-4xl font-black text-accent-yellow">
+              $
+              {Number(
+                useWatch({ control, name: 'remainingBalance' }) || 0
+              ).toFixed(2)}
             </p>
           </div>
         </div>
