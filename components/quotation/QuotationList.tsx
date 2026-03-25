@@ -1,11 +1,13 @@
 'use client'
 
+import { JSX, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
+
+import { formatCurrency, padFolio } from '@/lib/utils'
 import { deleteQuotation } from '@/app/quotations/actions'
-import { formatCurrency, formatDate, padFolio } from '@/lib/utils'
+
 import { Button } from '../ui/Button'
 import { ConfirmModal } from '../ui/Modal'
 
@@ -23,7 +25,13 @@ interface QuotationListProps {
   quotations: QuotationListItem[]
 }
 
-export function QuotationList({ quotations }: QuotationListProps) {
+/**
+ * QuotationList  renders a searchable and interactive list of quotations. It allows users to view, edit, generate PDFs, and delete quotations. The component also handles empty states and displays a confirmation modal before deletion.
+ *
+ * @param props - The component props
+ * @param props.quotations - An array of quotation items to display in the list
+ */
+export function QuotationList({ quotations }: QuotationListProps): JSX.Element {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState('')
   const [deleteModal, setDeleteModal] = useState<{
@@ -42,7 +50,10 @@ export function QuotationList({ quotations }: QuotationListProps) {
       padFolio(q.folio).includes(searchTerm)
   )
 
-  const handleDelete = async () => {
+  /**
+   * handleDelete is an asynchronous function that deletes a quotation when the user confirms the deletion in the modal. It calls the deleteQuotation action with the quotation ID, shows a success or error toast based on the result, and refreshes the page to update the list of quotations.
+   */
+  const handleDelete = async (): Promise<void> => {
     if (!deleteModal.quotation) return
 
     const result = await deleteQuotation(deleteModal.quotation.id)
@@ -68,7 +79,7 @@ export function QuotationList({ quotations }: QuotationListProps) {
           Comienza creando tu primera cotización profesional
         </p>
         <Link href="/quotations/new">
-          <Button size="lg" className="shadow-glow">
+          <Button className="shadow-glow" size="lg">
             <span className="text-xl">+</span>
             Nueva Cotización
           </Button>
@@ -87,11 +98,11 @@ export function QuotationList({ quotations }: QuotationListProps) {
               🔍
             </div>
             <input
-              type="text"
-              placeholder="Buscar por cliente, vehículo o folio..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full rounded-xl border border-dark-border bg-dark-elevated py-3.5 pr-4 pl-12 text-text-primary placeholder:text-text-muted focus:border-primary focus:ring-2 focus:ring-primary/50 focus:outline-none"
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Buscar por cliente, vehículo o folio..."
+              type="text"
+              value={searchTerm}
             />
           </div>
         </div>
@@ -130,8 +141,8 @@ export function QuotationList({ quotations }: QuotationListProps) {
 
                 return (
                   <tr
-                    key={quotation.id}
                     className="cursor-pointer transition-colors hover:bg-dark-elevated/50"
+                    key={quotation.id}
                     onClick={() => router.push(`/quotations/${quotation.id}`)}
                   >
                     <td className="px-6 py-4">
@@ -159,46 +170,46 @@ export function QuotationList({ quotations }: QuotationListProps) {
                         onClick={(e) => e.stopPropagation()}
                       >
                         <Button
-                          variant="ghost"
-                          size="sm"
                           onClick={() =>
                             router.push(`/quotations/${quotation.id}`)
                           }
+                          size="sm"
                           title="Ver"
+                          variant="ghost"
                         >
                           👁️
                         </Button>
                         <Button
-                          variant="ghost"
-                          size="sm"
                           onClick={() =>
                             router.push(`/quotations/${quotation.id}/edit`)
                           }
+                          size="sm"
                           title="Editar"
+                          variant="ghost"
                         >
                           ✏️
                         </Button>
                         <Button
-                          variant="ghost"
-                          size="sm"
                           onClick={() =>
                             window.open(
                               `/api/quotations/${quotation.id}/pdf`,
                               '_blank'
                             )
                           }
+                          size="sm"
                           title="PDF"
+                          variant="ghost"
                         >
                           📄
                         </Button>
                         <Button
-                          variant="ghost"
-                          size="sm"
+                          className="hover:text-red-400"
                           onClick={() =>
                             setDeleteModal({ isOpen: true, quotation })
                           }
+                          size="sm"
                           title="Eliminar"
-                          className="hover:text-red-400"
+                          variant="ghost"
                         >
                           🗑️
                         </Button>
@@ -214,7 +225,7 @@ export function QuotationList({ quotations }: QuotationListProps) {
         {filtered.length === 0 && searchTerm && (
           <div className="p-12 text-center">
             <p className="text-text-secondary">
-              No se encontraron resultados para "{searchTerm}"
+              No se encontraron resultados para {searchTerm}
             </p>
           </div>
         )}
@@ -222,12 +233,12 @@ export function QuotationList({ quotations }: QuotationListProps) {
 
       {/* Delete Confirmation Modal */}
       <ConfirmModal
+        confirmText="Eliminar"
         isOpen={deleteModal.isOpen}
+        message={`Se eliminará la cotización #${deleteModal.quotation ? padFolio(deleteModal.quotation.folio) : ''} de <span class="text-text-primary font-semibold">${deleteModal.quotation?.clientName}</span>. Esta acción no se puede deshacer.`}
         onClose={() => setDeleteModal({ isOpen: false, quotation: null })}
         onConfirm={handleDelete}
         title="¿Eliminar Cotización?"
-        message={`Se eliminará la cotización #${deleteModal.quotation ? padFolio(deleteModal.quotation.folio) : ''} de <span class="text-text-primary font-semibold">${deleteModal.quotation?.clientName}</span>. Esta acción no se puede deshacer.`}
-        confirmText="Eliminar"
       />
     </>
   )

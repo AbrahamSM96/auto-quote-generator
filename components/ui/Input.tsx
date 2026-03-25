@@ -1,4 +1,5 @@
 import { forwardRef, type InputHTMLAttributes } from 'react'
+
 import { cn } from '@/lib/utils'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -8,7 +9,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, label, error, icon, type = 'text', ...props }, ref) => {
+  ({ className, error, icon, label, type = 'text', ...props }, ref) => {
     return (
       <div className="space-y-2">
         {label && (
@@ -23,18 +24,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             </div>
           )}
           <input
-            ref={ref}
-            type={type}
             className={cn(
               'w-full rounded-xl border border-dark-border bg-dark-elevated px-4 py-3.5',
               'text-text-primary placeholder:text-text-muted',
               'focus:border-primary focus:ring-2 focus:ring-primary/50 focus:outline-none',
               'transition-all hover:border-dark-border/80',
               error &&
-                'border-red-500 focus:border-red-500 focus:ring-red-500/50',
+              'border-red-500 focus:border-red-500 focus:ring-red-500/50',
               icon && 'pl-12',
               className
             )}
+            ref={ref}
+            type={type}
             {...props}
           />
         </div>

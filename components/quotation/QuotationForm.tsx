@@ -1,12 +1,20 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { JSX, useEffect } from 'react'
 import { useFieldArray, useForm, useWatch } from 'react-hook-form'
+import type { Resolver } from 'react-hook-form'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+import type {
+  BodyworkItem,
+  PaintItem,
+  PartItem,
+  Quotation,
+  QuotationFormData,
+} from '@/types'
 import { createQuotation, updateQuotation } from '@/app/quotations/actions'
-import { workshopConfig } from '@/config/workshop'
 import {
   ESTIMATED_TIMES,
   SERVICES,
@@ -15,57 +23,94 @@ import {
 } from '@/lib/constants'
 import { formatDate, formatTime, padFolio } from '@/lib/utils'
 import { quotationSchema } from '@/lib/validations'
-import type { QuotationFormData } from '@/types'
-import { Button } from '../ui/Button'
+import { workshopConfig } from '@/config/workshop'
+
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card'
+import { Button } from '../ui/Button'
 import { Input } from '../ui/Input'
 import { Select } from '../ui/Select'
 
 interface QuotationFormProps {
   mode: 'create' | 'edit'
-  initialData?: any
+  initialData?: Quotation
 }
 
-export function QuotationForm({ mode, initialData }: QuotationFormProps) {
+/**
+ * QuotationForm component for creating and editing quotations
+ *
+ * @param props - Component props
+ * @param props.initialData - Initial data for the form
+ * @param props.mode - Mode of the form ('create' or 'edit')
+ */
+export function
+  QuotationForm({
+    initialData,
+    mode,
+  }: QuotationFormProps): JSX.Element {
   const router = useRouter()
   const now = new Date()
 
   const {
-    register,
-    handleSubmit,
     control,
-    setValue,
     formState: { errors, isSubmitting },
+    handleSubmit,
+    register,
+    setValue,
   } = useForm<QuotationFormData>({
-    resolver: zodResolver(quotationSchema),
-    defaultValues: initialData || {
-      clientName: '',
-      clientPhone: '',
-      clientEmail: '',
-      clientAddress: '',
-      vehicleBrand: '',
-      vehicleModel: '',
-      vehicleYear: '',
-      vehicleColor: '',
-      vehiclePlates: '',
-      vehiclePaintCode: '',
-      services: [],
-      customService: '',
-      estimatedTime: ESTIMATED_TIMES[1],
-      piecesToWork: 1,
-      bodyworkItems: [],
-      paintItems: [],
-      partItems: [],
-      totalAmount: 0,
-      downPayment: 0,
-      remainingBalance: 0,
-    },
+    defaultValues: initialData
+      ? {
+        bodyworkItems: (initialData.bodyworkItems as BodyworkItem[]) || [],
+        clientAddress: initialData.clientAddress,
+        clientEmail: initialData.clientEmail,
+        clientName: initialData.clientName,
+        clientPhone: initialData.clientPhone,
+        customService: initialData.customService,
+        downPayment: initialData.downPayment,
+        estimatedTime: initialData.estimatedTime,
+        mechanicalItems: (initialData.mechanicalItems as unknown as MechanicalItem[]) || [],
+        paintItems: (initialData.paintItems as PaintItem[]) || [],
+        partItems: (initialData.partItems as PartItem[]) || [],
+        piecesToWork: initialData.piecesToWork,
+        remainingBalance: initialData.remainingBalance,
+        services: (initialData.services as string[]) || [],
+        totalAmount: initialData.totalAmount,
+        vehicleBrand: initialData.vehicleBrand,
+        vehicleColor: initialData.vehicleColor,
+        vehicleModel: initialData.vehicleModel,
+        vehiclePaintCode: initialData.vehiclePaintCode,
+        vehiclePlates: initialData.vehiclePlates,
+        vehicleYear: initialData.vehicleYear,
+      }
+      : {
+        bodyworkItems: [],
+        clientAddress: '',
+        clientEmail: '',
+        clientName: '',
+        clientPhone: '',
+        customService: '',
+        downPayment: 0,
+        estimatedTime: ESTIMATED_TIMES[1],
+        mechanicalItems: [],
+        paintItems: [],
+        partItems: [],
+        piecesToWork: 1,
+        remainingBalance: 0,
+        services: [],
+        totalAmount: 0,
+        vehicleBrand: '',
+        vehicleColor: '',
+        vehicleModel: '',
+        vehiclePaintCode: '',
+        vehiclePlates: '',
+        vehicleYear: '',
+      },
+    resolver: zodResolver(quotationSchema) as Resolver<QuotationFormData>,
   })
 
   // Field arrays for dynamic sections
   const {
-    fields: bodyworkFields,
     append: appendBodywork,
+    fields: bodyworkFields,
     remove: removeBodywork,
   } = useFieldArray({
     control,
@@ -73,8 +118,8 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
   })
 
   const {
-    fields: paintFields,
     append: appendPaint,
+    fields: paintFields,
     remove: removePaint,
   } = useFieldArray({
     control,
@@ -82,18 +127,28 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
   })
 
   const {
-    fields: partFields,
     append: appendPart,
+    fields: partFields,
     remove: removePart,
   } = useFieldArray({
     control,
     name: 'partItems',
   })
 
+  const {
+    append: appendMechanical,
+    fields: mechanicalFields,
+    remove: removeMechanical,
+  } = useFieldArray({
+    control,
+    name: 'mechanicalItems',
+  })
+
   // Watch for changes to calculate totals
   const bodyworkItems = useWatch({ control, name: 'bodyworkItems' })
   const paintItems = useWatch({ control, name: 'paintItems' })
   const partItems = useWatch({ control, name: 'partItems' })
+  const mechanicalItems = useWatch({ control, name: 'mechanicalItems' })
   const downPayment = useWatch({ control, name: 'downPayment' })
   const services = useWatch({ control, name: 'services' })
 
@@ -111,13 +166,24 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
       (sum, item) => sum + Number(item?.cost || 0),
       0
     )
+    const mechanicalTotal = (mechanicalItems || []).reduce(
+      (sum, item) => sum + Number(item?.cost || 0),
+      0
+    )
 
-    const total = bodyworkTotal + paintTotal + partsTotal
+    const total = bodyworkTotal + paintTotal + partsTotal + mechanicalTotal
     const remaining = total - Number(downPayment || 0)
 
     setValue('totalAmount', total)
     setValue('remainingBalance', remaining)
-  }, [bodyworkItems, paintItems, partItems, downPayment, setValue])
+  }, [
+    bodyworkItems,
+    paintItems,
+    partItems,
+    mechanicalItems,
+    downPayment,
+    setValue,
+  ])
 
   // Update paint item total when quantity or unitPrice changes
   useEffect(() => {
@@ -129,11 +195,21 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
     })
   }, [paintItems, setValue])
 
-  const onSubmit = async (data: QuotationFormData) => {
+  /**
+   * onSubmit handler for form submission
+   *
+   * @param data - Form data to submit
+   */
+  const onSubmit = async (data: QuotationFormData): Promise<void> => {
+    if (mode === 'edit' && !initialData) {
+      toast.error('No se encontró la cotización')
+      return
+    }
+
     const result =
       mode === 'create'
         ? await createQuotation(data)
-        : await updateQuotation(initialData.id, data)
+        : await updateQuotation(initialData?.id ?? '', data)
 
     if (result.success) {
       toast.success(
@@ -147,16 +223,21 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
     }
   }
 
-  const toggleService = (serviceKey: string) => {
+  /**
+   * toggleService toggles a service in the services array
+   *
+   * @param serviceKey - The key of the service to toggle
+   */
+  const toggleService = (serviceKey: string): void => {
     const current = services || []
     const updated = current.includes(serviceKey)
       ? current.filter((s) => s !== serviceKey)
       : [...current, serviceKey]
     setValue('services', updated)
   }
-
+  console.log(initialData, 'initialdata')
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       {/* Header */}
       <header className="glass-card rounded-2xl border border-dark-border/50 p-8 shadow-2xl">
         <div className="flex flex-wrap items-center justify-between gap-4">
@@ -172,7 +253,7 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
                 {workshopConfig.name}
               </h1>
               <p className="mt-1 flex items-center gap-2 font-semibold tracking-wider text-primary">
-                <span className="h-px w-8 bg-primary"></span>
+                <span className="h-px w-8 bg-primary" />
                 {workshopConfig.subtitle}
               </p>
             </div>
@@ -295,15 +376,15 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
               {...register('vehicleBrand')}
               error={errors.vehicleBrand?.message}
               options={[
-                { value: '', label: 'Seleccionar marca...' },
+                { label: 'Seleccionar marca...', value: '' },
                 ...VEHICLE_BRANDS.map((brand) => ({
-                  value: brand,
                   label: brand,
+                  value: brand,
                 })),
               ]}
             />
             <Input
-              label="Modelo / Año"
+              label="Modelo"
               {...register('vehicleModel')}
               error={errors.vehicleModel?.message}
               placeholder={UI_TEXT.placeholders.vehicleModel}
@@ -352,14 +433,13 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
           <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {SERVICES.map((service) => (
               <button
+                className={`rounded-xl px-5 py-4 font-medium transition-all duration-200 ${(services || []).includes(service.key)
+                  ? 'scale-[1.02] bg-primary text-white shadow-glow-sm'
+                  : 'border border-dark-border bg-dark-elevated text-text-secondary hover:border-primary/50 hover:text-text-primary'
+                  } `}
                 key={service.key}
-                type="button"
                 onClick={() => toggleService(service.key)}
-                className={`rounded-xl px-5 py-4 font-medium transition-all duration-200 ${
-                  (services || []).includes(service.key)
-                    ? 'scale-[1.02] bg-primary text-white shadow-glow-sm'
-                    : 'border border-dark-border bg-dark-elevated text-text-secondary hover:border-primary/50 hover:text-text-primary'
-                } `}
+                type="button"
               >
                 <span className="mr-2">{service.icon}</span>
                 {service.label}
@@ -384,8 +464,8 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
               label={UI_TEXT.labels.estimatedTime}
               {...register('estimatedTime')}
               options={ESTIMATED_TIMES.map((time) => ({
-                value: time,
                 label: time,
+                value: time,
               }))}
             />
             <Input
@@ -405,9 +485,9 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary font-bold text-white">
               1
             </div>
-            <h3 className="flex items-center gap-2 text-lg font-bold text-text-primary">
+            <h3 className="flex items-center gap-2 text-lg font-bold text-text-primary uppercase">
               <span className="text-xl">🔨</span>
-              {UI_TEXT.sections.bodywork.toUpperCase()}
+              {UI_TEXT.sections.bodywork}
             </h3>
           </div>
           <span className="font-technical text-2xl font-bold text-primary">
@@ -420,42 +500,42 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
         <div className="space-y-3 p-6">
           {bodyworkFields.map((field, index) => (
             <div
-              key={field.id}
               className="group flex items-center gap-3 rounded-xl border border-dark-border/50 bg-dark-elevated p-4 transition-colors hover:border-primary/30"
+              key={field.id}
             >
               <Input
                 {...register(`bodyworkItems.${index}.description`)}
-                placeholder={UI_TEXT.placeholders.bodyworkDescription}
                 className="flex-1"
                 error={errors.bodyworkItems?.[index]?.description?.message}
+                placeholder={UI_TEXT.placeholders.bodyworkDescription}
               />
               <Input
                 {...register(`bodyworkItems.${index}.cost`)}
-                type="number"
-                step="0.01"
-                placeholder="$0.00"
                 className="w-32 text-right font-technical"
                 error={errors.bodyworkItems?.[index]?.cost?.message}
+                placeholder="$0.00"
+                step="0.01"
+                type="number"
               />
               <button
-                type="button"
-                onClick={() => removeBodywork(index)}
                 className="h-10 w-10 rounded-lg bg-red-500/10 text-red-400 opacity-0 transition-colors group-hover:opacity-100 hover:bg-red-500/20"
+                onClick={() => removeBodywork(index)}
+                type="button"
               >
                 ×
               </button>
             </div>
           ))}
           <button
-            type="button"
+            className="w-full rounded-xl border-2 border-dashed border-dark-border py-4 font-medium text-text-secondary transition-all duration-200 hover:border-primary hover:bg-primary/5 hover:text-primary"
             onClick={() =>
               appendBodywork({
-                id: crypto.randomUUID(),
-                description: '',
                 cost: 0,
+                description: '',
+                id: crypto.randomUUID(),
               })
             }
-            className="w-full rounded-xl border-2 border-dashed border-dark-border py-4 font-medium text-text-secondary transition-all duration-200 hover:border-primary hover:bg-primary/5 hover:text-primary"
+            type="button"
           >
             {UI_TEXT.buttons.addBodywork}
           </button>
@@ -469,9 +549,9 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary font-bold text-white">
               2
             </div>
-            <h3 className="flex items-center gap-2 text-lg font-bold text-text-primary">
+            <h3 className="flex items-center gap-2 text-lg font-bold text-text-primary uppercase">
               <span className="text-xl">🎨</span>
-              {UI_TEXT.sections.paint.toUpperCase()}
+              {UI_TEXT.sections.paint}
             </h3>
           </div>
           <span className="font-technical text-2xl font-bold text-primary">
@@ -484,59 +564,59 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
         <div className="space-y-3 p-6">
           {paintFields.map((field, index) => (
             <div
-              key={field.id}
               className="group flex items-center gap-3 rounded-xl border border-dark-border/50 bg-dark-elevated p-4 transition-colors hover:border-primary/30"
+              key={field.id}
             >
               <Input
                 {...register(`paintItems.${index}.part`)}
-                placeholder={UI_TEXT.placeholders.paintPart}
                 className="flex-1"
                 error={errors.paintItems?.[index]?.part?.message}
+                placeholder={UI_TEXT.placeholders.paintPart}
               />
               <Input
                 {...register(`paintItems.${index}.quantity`)}
-                type="number"
-                placeholder="Cant."
                 className="w-20 text-center font-technical"
                 error={errors.paintItems?.[index]?.quantity?.message}
+                placeholder="Cant."
+                type="number"
               />
               <Input
                 {...register(`paintItems.${index}.unitPrice`)}
-                type="number"
-                step="0.01"
-                placeholder="P. Unit."
                 className="w-28 text-right font-technical"
                 error={errors.paintItems?.[index]?.unitPrice?.message}
+                placeholder="P. Unit."
+                step="0.01"
+                type="number"
               />
               <Input
                 {...register(`paintItems.${index}.total`)}
-                type="number"
-                step="0.01"
-                placeholder="$0.00"
                 className="w-32 bg-dark-bg text-right font-technical"
+                placeholder="$0.00"
                 readOnly
+                step="0.01"
+                type="number"
               />
               <button
-                type="button"
-                onClick={() => removePaint(index)}
                 className="h-10 w-10 rounded-lg bg-red-500/10 text-red-400 opacity-0 transition-colors group-hover:opacity-100 hover:bg-red-500/20"
+                onClick={() => removePaint(index)}
+                type="button"
               >
                 ×
               </button>
             </div>
           ))}
           <button
-            type="button"
+            className="w-full rounded-xl border-2 border-dashed border-dark-border py-4 font-medium text-text-secondary transition-all duration-200 hover:border-primary hover:bg-primary/5 hover:text-primary"
             onClick={() =>
               appendPaint({
                 id: crypto.randomUUID(),
                 part: '',
                 quantity: 1,
-                unitPrice: 0,
                 total: 0,
+                unitPrice: 0,
               })
             }
-            className="w-full rounded-xl border-2 border-dashed border-dark-border py-4 font-medium text-text-secondary transition-all duration-200 hover:border-primary hover:bg-primary/5 hover:text-primary"
+            type="button"
           >
             {UI_TEXT.buttons.addPaint}
           </button>
@@ -565,38 +645,98 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
         <div className="space-y-3 p-6">
           {partFields.map((field, index) => (
             <div
-              key={field.id}
               className="group flex items-center gap-3 rounded-xl border border-dark-border/50 bg-dark-elevated p-4 transition-colors hover:border-primary/30"
+              key={field.id}
             >
               <Input
                 {...register(`partItems.${index}.description`)}
-                placeholder={UI_TEXT.placeholders.partDescription}
                 className="flex-1"
                 error={errors.partItems?.[index]?.description?.message}
+                placeholder={UI_TEXT.placeholders.partDescription}
               />
               <Input
                 {...register(`partItems.${index}.cost`)}
-                type="number"
-                step="0.01"
-                placeholder="$0.00"
                 className="w-32 text-right font-technical"
                 error={errors.partItems?.[index]?.cost?.message}
+                placeholder="$0.00"
+                step="0.01"
+                type="number"
               />
               <button
-                type="button"
-                onClick={() => removePart(index)}
                 className="h-10 w-10 rounded-lg bg-red-500/10 text-red-400 opacity-0 transition-colors group-hover:opacity-100 hover:bg-red-500/20"
+                onClick={() => removePart(index)}
+                type="button"
               >
                 ×
               </button>
             </div>
           ))}
           <button
-            type="button"
-            onClick={() =>
-              appendPart({ id: crypto.randomUUID(), description: '', cost: 0 })
-            }
             className="w-full rounded-xl border-2 border-dashed border-dark-border py-4 font-medium text-text-secondary transition-all duration-200 hover:border-primary hover:bg-primary/5 hover:text-primary"
+            onClick={() =>
+              appendPart({ cost: 0, description: '', id: crypto.randomUUID(), })
+            }
+            type="button"
+          >
+            {UI_TEXT.buttons.addPart}
+          </button>
+        </div>
+      </div>
+
+      {/* Mechanical Section */}
+      <div className="glass-card overflow-hidden rounded-2xl">
+        <div className="flex items-center justify-between border-b border-dark-border/50 bg-gradient-to-r from-dark-elevated to-dark-surface px-6 py-4">
+          <div className="flex items-center gap-4">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary font-bold text-white">
+              4
+            </div>
+            <h3 className="flex items-center gap-2 text-lg font-bold text-text-primary uppercase">
+              <span className="text-xl">💡</span>
+              {UI_TEXT.sections.mechanical}
+            </h3>
+          </div>
+          <span className="font-technical text-2xl font-bold text-primary">
+            $
+            {(mechanicalItems || [])
+              .reduce((sum: number, item: { cost: number }) => sum + Number(item?.cost || 0), 0)
+              .toFixed(2)}
+          </span>
+        </div>
+        <div className="space-y-3 p-6">
+          {partFields.map((field, index) => (
+            <div
+              className="group flex items-center gap-3 rounded-xl border border-dark-border/50 bg-dark-elevated p-4 transition-colors hover:border-primary/30"
+              key={field.id}
+            >
+              <Input
+                {...register(`partItems.${index}.description`)}
+                className="flex-1"
+                error={errors.partItems?.[index]?.description?.message}
+                placeholder={UI_TEXT.placeholders.partDescription}
+              />
+              <Input
+                {...register(`partItems.${index}.cost`)}
+                className="w-32 text-right font-technical"
+                error={errors.partItems?.[index]?.cost?.message}
+                placeholder="$0.00"
+                step="0.01"
+                type="number"
+              />
+              <button
+                className="h-10 w-10 rounded-lg bg-red-500/10 text-red-400 opacity-0 transition-colors group-hover:opacity-100 hover:bg-red-500/20"
+                onClick={() => removePart(index)}
+                type="button"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+          <button
+            className="w-full rounded-xl border-2 border-dashed border-dark-border py-4 font-medium text-text-secondary transition-all duration-200 hover:border-primary hover:bg-primary/5 hover:text-primary"
+            onClick={() =>
+              appendPart({ cost: 0, description: '', id: crypto.randomUUID(), })
+            }
+            type="button"
           >
             {UI_TEXT.buttons.addPart}
           </button>
@@ -624,9 +764,9 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
             </p>
             <input
               {...register('downPayment')}
-              type="number"
-              step="0.01"
               className="w-full rounded-xl border-2 border-primary/30 bg-dark-bg py-3 text-center font-technical text-3xl font-bold text-text-primary focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+              step="0.01"
+              type="number"
             />
           </div>
           <div className="space-y-2">
@@ -646,18 +786,18 @@ export function QuotationForm({ mode, initialData }: QuotationFormProps) {
       {/* Action Buttons */}
       <div className="flex gap-4">
         <Button
+          disabled={isSubmitting}
+          onClick={() => router.push('/')}
           type="button"
           variant="secondary"
-          onClick={() => router.push('/')}
-          disabled={isSubmitting}
         >
           {UI_TEXT.buttons.cancel}
         </Button>
         <Button
-          type="submit"
           className="flex-1"
-          loading={isSubmitting}
           disabled={isSubmitting}
+          loading={isSubmitting}
+          type="submit"
         >
           {mode === 'create' ? UI_TEXT.buttons.save : UI_TEXT.buttons.update}
         </Button>

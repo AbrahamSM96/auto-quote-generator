@@ -1,14 +1,13 @@
 export const workshopConfig = {
-  name: 'PREMIUM LAMINADO Y PINTURA',
-  subtitle: 'COTIZACIÓN Y PRESUPUESTO',
-  manager: 'Roberto Salgado Méndez',
-  phone: '3328479652',
-  email: 'contacto@premium.com.mx',
   address: 'Calle y Número',
-  logo: '/images/workshop-logo.png',
-
   // Locale settings
-  locale: 'es-MX',
   currency: 'MXN',
+  email: 'contacto@premium.com.mx',
+  locale: 'es-MX',
+  logo: '/images/workshop-logo.png',
+  manager: 'Roberto Salgado Méndez',
+  name: 'PREMIUM LAMINADO Y PINTURA',
+  phone: '3328479652',
+  subtitle: 'COTIZACIÓN Y PRESUPUESTO',
   timezone: 'America/Mexico_City',
 }

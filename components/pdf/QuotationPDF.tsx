@@ -1,107 +1,114 @@
-/** biome-ignore-all lint/suspicious/noArrayIndexKey: <> */
 import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
-import { workshopConfig } from '@/config/workshop'
-import { SERVICES } from '@/lib/constants'
+import { JSX } from 'react'
+
 import { formatCurrency, formatDate, formatTime, padFolio } from '@/lib/utils'
+import { SERVICES } from '@/lib/constants'
+import { workshopConfig } from '@/config/workshop'
 
-const styles = StyleSheet.create({
-  page: {
-    padding: 40,
-    fontFamily: 'Helvetica',
-    fontSize: 10,
-    backgroundColor: '#ffffff',
-  },
-  header: {
-    marginBottom: 20,
-    paddingBottom: 15,
-    borderBottom: '2px solid #EF4444',
-  },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  subtitle: { fontSize: 12, color: '#EF4444', fontWeight: 'bold' },
-  folio: { fontSize: 28, fontWeight: 'bold', color: '#EF4444' },
-  folioLabel: { fontSize: 10, color: '#6B7280', marginBottom: 4 },
-  dateTime: { fontSize: 10, color: '#6B7280', textAlign: 'right' },
-  section: { marginTop: 20, marginBottom: 15 },
-  sectionHeader: {
-    backgroundColor: '#1F2937',
-    color: '#ffffff',
-    padding: 8,
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  label: {
-    fontSize: 9,
-    color: '#6B7280',
-    textTransform: 'uppercase',
-    marginBottom: 2,
-  },
-  value: { fontSize: 11, color: '#1F2937' },
-  grid2: { flexDirection: 'row', gap: 20 },
-  col: { flex: 1 },
-  serviceTag: {
-    backgroundColor: '#FEE2E2',
-    color: '#991B1B',
-    padding: '4 8',
-    borderRadius: 4,
-    fontSize: 9,
-    marginRight: 8,
-    marginBottom: 8,
-  },
-  servicesContainer: { flexDirection: 'row', flexWrap: 'wrap' },
-  table: { marginTop: 10 },
-  tableRow: {
-    flexDirection: 'row',
-    borderBottom: '1px solid #E5E7EB',
-    paddingVertical: 8,
-  },
-  tableCol1: { flex: 3 },
-  tableCol2: { flex: 1, textAlign: 'right' },
-  totalsSection: { marginTop: 20, backgroundColor: '#1F2937', padding: 15 },
-  totalsGrid: { flexDirection: 'row', justifyContent: 'space-around' },
-  totalItem: { alignItems: 'center' },
-  totalLabel: {
-    fontSize: 8,
-    color: '#9CA3AF',
-    textTransform: 'uppercase',
-    marginBottom: 4,
-  },
-  totalValue: { fontSize: 18, fontWeight: 'bold', color: '#ffffff' },
-  balanceValue: { fontSize: 18, fontWeight: 'bold', color: '#FBBF24' },
-})
+import { BodyworkItem, PaintItem, PartItem, Quotation } from '../../types'
 
-export function QuotationPDF({ quotation }: { quotation: any }) {
-  const totalAmount =
-    typeof quotation.totalAmount === 'object'
-      ? quotation.totalAmount.toNumber()
-      : Number(quotation.totalAmount)
+const styles = StyleSheet.create(
+  {
+    balanceValue: { color: '#FBBF24', fontSize: 18, fontWeight: 'bold' },
+    col: { flex: 1 },
+    dateTime: { color: '#6B7280', fontSize: 10, textAlign: 'right' },
+    folio: { color: '#EF4444', fontSize: 28, fontWeight: 'bold' },
+    folioLabel: { color: '#6B7280', fontSize: 10, marginBottom: 4 },
+    grid2: { flexDirection: 'row', gap: 20 },
+    header: {
+      borderBottom: '2px solid #EF4444',
+      marginBottom: 20,
+      paddingBottom: 15,
+    },
+    headerRow: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    label: {
+      color: '#6B7280',
+      fontSize: 9,
+      marginBottom: 2,
+      textTransform: 'uppercase',
+    },
+    page: {
+      backgroundColor: '#ffffff',
+      fontFamily: 'Helvetica',
+      fontSize: 10,
+      padding: 40,
+    },
+    section: { marginBottom: 15, marginTop: 20 },
+    sectionHeader: {
+      backgroundColor: '#1F2937',
+      color: '#ffffff',
+      fontSize: 12,
+      fontWeight: 'bold',
+      marginBottom: 10,
+      padding: 8,
+    },
+    serviceTag: {
+      backgroundColor: '#FEE2E2',
+      borderRadius: 4,
+      color: '#991B1B',
+      fontSize: 9,
+      marginBottom: 8,
+      marginRight: 8,
+      padding: '4 8',
+    },
+    servicesContainer: { flexDirection: 'row', flexWrap: 'wrap' },
+    subtitle: { color: '#EF4444', fontSize: 12, fontWeight: 'bold' },
+    table: { marginTop: 10 },
+    tableCol1: { flex: 3 },
+    tableCol2: { flex: 1, textAlign: 'right' },
+    tableRow: {
+      borderBottom: '1px solid #E5E7EB',
+      flexDirection: 'row',
+      paddingVertical: 8,
+    },
+    title: {
+      color: '#1F2937',
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 4,
+    },
+    totalItem: { alignItems: 'center' },
+    totalLabel: {
+      color: '#9CA3AF',
+      fontSize: 8,
+      marginBottom: 4,
+      textTransform: 'uppercase',
+    },
+    totalValue: { color: '#ffffff', fontSize: 18, fontWeight: 'bold' },
+    totalsGrid: { flexDirection: 'row', justifyContent: 'space-around' },
+    totalsSection: { backgroundColor: '#1F2937', marginTop: 20, padding: 15 },
+    value: { color: '#1F2937', fontSize: 11 },
+  }
+)
 
-  const downPayment =
-    typeof quotation.downPayment === 'object'
-      ? quotation.downPayment.toNumber()
-      : Number(quotation.downPayment)
+/**
+ * QuotationPDF 
+ *
+ * @param props - Component props
+ * @param props.quotation - Quotation data to generate the PDF
+ */
+export function QuotationPDF({ quotation }: { quotation: Quotation }): JSX.Element {
+  const totalAmount = quotation.totalAmount
 
-  const remainingBalance =
-    typeof quotation.remainingBalance === 'object'
-      ? quotation.remainingBalance.toNumber()
-      : Number(quotation.remainingBalance)
+  const downPayment = quotation.downPayment
 
-  const bodyworkItems = (quotation.bodyworkItems || []) as any[]
-  const paintItems = (quotation.paintItems || []) as any[]
-  const partItems = (quotation.partItems || []) as any[]
+  const remainingBalance = quotation.remainingBalance
+
+  const bodyworkItems = (quotation.bodyworkItems || []) as BodyworkItem[]
+  const paintItems = (quotation.paintItems || []) as PaintItem[]
+  const partItems = (quotation.partItems || []) as PartItem[]
   const services = (quotation.services || []) as string[]
 
-  const getServiceLabel = (key: string) => {
+  /**
+   * getServiceLabel
+   *
+   * @param key - Service key to find the label
+   */
+  const getServiceLabel = (key: string): string => {
     const service = SERVICES.find((s) => s.key === key)
     return service ? service.label : key
   }

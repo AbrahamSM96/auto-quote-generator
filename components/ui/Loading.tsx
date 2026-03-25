@@ -1,4 +1,9 @@
-export function Loading() {
+import { JSX } from 'react'
+
+/**
+ * Loading 
+ */
+export function Loading(): JSX.Element {
   return (
     <div className="flex items-center justify-center py-12">
       <div className="relative">
@@ -9,11 +14,14 @@ export function Loading() {
   )
 }
 
-export function LoadingSkeleton() {
+/**
+ * LoadingSkeleton
+ */
+export function LoadingSkeleton(): JSX.Element {
   return (
     <div className="glass-card animate-pulse space-y-4 rounded-2xl p-6">
       {[1, 2, 3].map((i) => (
-        <div key={i} className="flex items-center gap-4">
+        <div className="flex items-center gap-4" key={i}>
           <div className="h-10 w-16 rounded-lg bg-dark-elevated" />
           <div className="h-10 flex-1 rounded-lg bg-dark-elevated" />
           <div className="h-10 w-32 rounded-lg bg-dark-elevated" />

@@ -1,16 +1,25 @@
-import type { HTMLAttributes } from 'react'
+import type { HTMLAttributes, JSX } from 'react'
+
 import { cn } from '@/lib/utils'
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   glass?: boolean
 }
 
+/**
+ * Card component with optional glass effect. Use CardHeader, CardTitle, and CardContent for structured content.
+ *
+ * @param props   - The properties for the Card component.
+ * @param props.children - The content to be displayed inside the card.
+ * @param props.className - Additional CSS classes to apply to the card.
+ * @param props.glass - Whether to apply the glass effect to the card.
+ */
 export function Card({
+  children,
   className,
   glass = true,
-  children,
   ...props
-}: CardProps) {
+}: CardProps): JSX.Element {
   return (
     <div
       className={cn(
@@ -26,11 +35,18 @@ export function Card({
   )
 }
 
+/**
+ * CardHeader component for displaying the header section of a card, typically containing the title and optional actions.
+ *
+ * @param props - The properties for the CardHeader component.
+ * @param props.children - The content to be displayed inside the card header.
+ * @param props.className - Additional CSS classes to apply to the card header.
+ */
 export function CardHeader({
-  className,
   children,
+  className,
   ...props
-}: HTMLAttributes<HTMLDivElement>) {
+}: HTMLAttributes<HTMLDivElement>): JSX.Element {
   return (
     <div
       className={cn(
@@ -44,11 +60,18 @@ export function CardHeader({
   )
 }
 
+/**
+ * CardTitle component for displaying the title of a card.
+ *
+ * @param props - The properties for the CardTitle component.
+ * @param props.children - The content to be displayed inside the card title.
+ * @param props.className - Additional CSS classes to apply to the card title.
+ */
 export function CardTitle({
-  className,
   children,
+  className,
   ...props
-}: HTMLAttributes<HTMLHeadingElement>) {
+}: HTMLAttributes<HTMLHeadingElement>): JSX.Element {
   return (
     <h2
       className={cn('text-xl font-bold text-text-primary', className)}
@@ -59,11 +82,18 @@ export function CardTitle({
   )
 }
 
+/**
+ * CardContent component for displaying the main content of a card.
+ *
+ * @param props - The properties for the CardContent component.
+ * @param props.children - The content to be displayed inside the card content.
+ * @param props.className - Additional CSS classes to apply to the card content.
+ */
 export function CardContent({
-  className,
   children,
+  className,
   ...props
-}: HTMLAttributes<HTMLDivElement>) {
+}: HTMLAttributes<HTMLDivElement>): JSX.Element {
   return (
     <div className={cn('space-y-4', className)} {...props}>
       {children}

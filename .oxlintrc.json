@@ -39,8 +39,9 @@
   "plugins": ["react", "unicorn", "typescript", "oxc"],
   "ignorePatterns": [
     "**/public/jwplayer.js",
-    "**/src/generated/**",
+    "**/generated/**",
     "**/public/**",
+    "**/prisma/migrations/**",
     "jwplayer.js",
     "next.config.js",
     "sst.config.ts",

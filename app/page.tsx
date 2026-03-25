@@ -1,9 +1,15 @@
+import { JSX } from 'react'
 import Link from 'next/link'
-import { QuotationList } from '@/components/quotation/QuotationList'
+
 import { Button } from '@/components/ui/Button'
+import { QuotationList } from '@/components/quotation/QuotationList'
+
 import { getQuotations } from './quotations/actions'
 
-export default async function HomePage() {
+/**
+ * HomePage
+ */
+export default async function HomePage(): Promise<JSX.Element> {
   const quotations = await getQuotations()
 
   return (
@@ -17,12 +23,12 @@ export default async function HomePage() {
                 Sistema de Cotización
               </h1>
               <p className="flex items-center gap-2 font-medium text-text-secondary">
-                <span className="h-px w-8 bg-primary"></span>
+                <span className="h-px w-8 bg-primary" />
                 Taller Automotriz
               </p>
             </div>
             <Link href="/quotations/new">
-              <Button size="lg" className="shadow-glow">
+              <Button className="shadow-glow" size="lg">
                 <span className="text-xl">+</span>
                 Nueva Cotización
               </Button>

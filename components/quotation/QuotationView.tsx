@@ -1,40 +1,46 @@
-/** biome-ignore-all lint/suspicious/noArrayIndexKey: <explanation> */
+/* eslint-disable react/no-array-index-key */
 'use client'
 
-import { workshopConfig } from '@/config/workshop'
-import { SERVICES, UI_TEXT } from '@/lib/constants'
+import { JSX } from 'react'
+
+import type { BodyworkItem, PaintItem, PartItem, Quotation } from '@/types'
 import { formatCurrency, formatDate, formatTime, padFolio } from '@/lib/utils'
+import { SERVICES, UI_TEXT } from '@/lib/constants'
+import { workshopConfig } from '@/config/workshop'
+
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card'
 
 interface QuotationViewProps {
-  quotation: any
+  quotation: Quotation
 }
 
-export function QuotationView({ quotation }: QuotationViewProps) {
-  const bodyworkItems = quotation.bodyworkItems as any[]
-  const paintItems = quotation.paintItems as any[]
-  const partItems = quotation.partItems as any[]
+/**
+ * QuotationView
+ *
+ * @param props - The component props
+ * @param props.quotation - The quotation data to display in the view
+ */
+export function QuotationView({ quotation }: QuotationViewProps): JSX.Element {
+  const bodyworkItems = quotation.bodyworkItems as BodyworkItem[]
+  const paintItems = quotation.paintItems as PaintItem[]
+  const partItems = quotation.partItems as PartItem[]
   const services = quotation.services as string[]
 
-  const getServiceLabel = (key: string) => {
+  /**
+   * getServiceLabel
+   *
+   * @param key - The service key to look up
+   */
+  const getServiceLabel = (key: string): string => {
     const service = SERVICES.find((s) => s.key === key)
     return service ? `${service.icon} ${service.label}` : key
   }
 
-  const totalAmount =
-    typeof quotation.totalAmount === 'object'
-      ? quotation.totalAmount.toNumber()
-      : Number(quotation.totalAmount)
+  const totalAmount = quotation.totalAmount
 
-  const downPayment =
-    typeof quotation.downPayment === 'object'
-      ? quotation.downPayment.toNumber()
-      : Number(quotation.downPayment)
+  const downPayment = quotation.downPayment
 
-  const remainingBalance =
-    typeof quotation.remainingBalance === 'object'
-      ? quotation.remainingBalance.toNumber()
-      : Number(quotation.remainingBalance)
+  const remainingBalance = quotation.remainingBalance
 
   return (
     <div className="space-y-6">
@@ -53,7 +59,7 @@ export function QuotationView({ quotation }: QuotationViewProps) {
                 {workshopConfig.name}
               </h1>
               <p className="mt-1 flex items-center gap-2 font-semibold tracking-wider text-primary">
-                <span className="h-px w-8 bg-primary"></span>
+                <span className="h-px w-8 bg-primary" />
                 {workshopConfig.subtitle}
               </p>
             </div>
@@ -194,8 +200,8 @@ export function QuotationView({ quotation }: QuotationViewProps) {
           <div className="mb-4 flex flex-wrap gap-2">
             {services.map((serviceKey) => (
               <span
-                key={serviceKey}
                 className="rounded-lg border border-primary/30 bg-primary/10 px-4 py-2 font-medium text-primary"
+                key={serviceKey}
               >
                 {getServiceLabel(serviceKey)}
               </span>
@@ -243,8 +249,8 @@ export function QuotationView({ quotation }: QuotationViewProps) {
           <div className="space-y-2 p-6">
             {bodyworkItems.map((item, index) => (
               <div
-                key={index}
                 className="flex items-center justify-between border-b border-dark-border/30 py-3"
+                key={index}
               >
                 <span className="text-text-primary">{item.description}</span>
                 <span className="font-technical font-bold text-primary">
@@ -264,8 +270,8 @@ export function QuotationView({ quotation }: QuotationViewProps) {
           <div className="space-y-2 p-6">
             {paintItems.map((item, index) => (
               <div
-                key={index}
                 className="flex items-center justify-between border-b border-dark-border/30 py-3"
+                key={index}
               >
                 <div>
                   <span className="text-text-primary">{item.part}</span>
@@ -292,8 +298,8 @@ export function QuotationView({ quotation }: QuotationViewProps) {
           <div className="space-y-2 p-6">
             {partItems.map((item, index) => (
               <div
-                key={index}
                 className="flex items-center justify-between border-b border-dark-border/30 py-3"
+                key={index}
               >
                 <span className="text-text-primary">{item.description}</span>
                 <span className="font-technical font-bold text-primary">

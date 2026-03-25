@@ -3,4 +3,5 @@ export type {
   PaintItem,
   PartItem,
   QuotationFormData,
+  Quotation,
 } from './quotation'

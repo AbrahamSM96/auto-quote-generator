@@ -1,12 +1,33 @@
+/* eslint-disable sort-keys */
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { prisma } from '@/lib/prisma'
-import { quotationSchema } from '@/lib/validations'
-import type { QuotationFormData } from '@/types'
-// import { PrismaClient } from "../../generated/prisma/client";
 
-export async function createQuotation(data: QuotationFormData) {
+import { prisma } from '@/lib/prisma'
+import type { Quotation, QuotationFormData } from '@/types'
+import { quotationSchema } from '@/lib/validations'
+
+type ActionSuccess = {
+  success: true
+  id?: string
+  folio?: number
+}
+
+type ActionError = {
+  success: false
+  error: string
+}
+
+type ActionResult = ActionSuccess | ActionError
+
+/**
+ * createQuotation
+ *
+ * @param data - Quotation form data to create a new quotation
+ */
+export async function createQuotation(
+  data: QuotationFormData
+): Promise<ActionResult> {
   try {
     // Validate data on server
     const validated = quotationSchema.parse(data)
@@ -52,7 +73,8 @@ export async function createQuotation(data: QuotationFormData) {
       folio: quotation.folio,
     }
   } catch (error) {
-    console.error('Error creating quotation:', error)
+    // eslint-disable-next-line no-console
+    console.log('Error creating quotation:', error)
 
     // if (error instanceof PrismaClient) {
     //   return {
@@ -68,7 +90,16 @@ export async function createQuotation(data: QuotationFormData) {
   }
 }
 
-export async function updateQuotation(id: string, data: QuotationFormData) {
+/**
+ *updateQuotation
+ *
+ * @param id - ID of the quotation to update
+ * @param data - Updated quotation form data
+ */
+export async function updateQuotation(
+  id: string,
+  data: QuotationFormData
+): Promise<ActionResult> {
   try {
     const validated = quotationSchema.parse(data)
 
@@ -102,7 +133,8 @@ export async function updateQuotation(id: string, data: QuotationFormData) {
     revalidatePath(`/quotations/${id}`)
     return { success: true }
   } catch (error) {
-    console.error('Error updating quotation:', error)
+    // eslint-disable-next-line no-console
+    console.log('Error updating quotation:', error)
     return {
       success: false,
       error: 'Error al actualizar cotización',
@@ -110,13 +142,20 @@ export async function updateQuotation(id: string, data: QuotationFormData) {
   }
 }
 
+/**
+ * deleteQuotation
+ *
+ * @param id - ID of the quotation to delete
+ */
+// oxlint-disable-next-line typescript/explicit-module-boundary-types
 export async function deleteQuotation(id: string) {
   try {
     await prisma.quotation.delete({ where: { id } })
     revalidatePath('/')
     return { success: true }
   } catch (error) {
-    console.error('Error deleting quotation:', error)
+    // eslint-disable-next-line no-console
+    console.log('Error deleting quotation:', error)
     return {
       success: false,
       error: 'Error al eliminar cotización',
@@ -124,17 +163,45 @@ export async function deleteQuotation(id: string) {
   }
 }
 
-export async function getQuotation(id: string) {
+/**
+ * getQuotation
+ *
+ * @param id - ID of the quotation to retrieve
+ */
+export async function getQuotation(id: string): Promise<Quotation | null> {
   try {
     const quotation = await prisma.quotation.findUnique({ where: { id } })
-    return quotation
+
+    if (!quotation) return null
+
+    // Convert Decimal to number for Client Components
+    return {
+      ...quotation,
+      totalAmount: quotation.totalAmount.toNumber(),
+      downPayment: quotation.downPayment.toNumber(),
+      remainingBalance: quotation.remainingBalance.toNumber(),
+    }
   } catch (error) {
-    console.error('Error fetching quotation:', error)
+    // eslint-disable-next-line no-console
+    console.log('Error fetching quotation:', error)
     return null
   }
 }
 
-export async function getQuotations() {
+/**
+ * getQuotations
+ */
+export async function getQuotations(): Promise<
+  Array<{
+    id: string
+    folio: number
+    clientName: string
+    vehicleBrand: string
+    vehicleModel: string
+    totalAmount: number
+    createdAt: Date
+  }>
+> {
   try {
     const quotations = await prisma.quotation.findMany({
       orderBy: { createdAt: 'desc' },
@@ -148,9 +215,15 @@ export async function getQuotations() {
         createdAt: true,
       },
     })
-    return quotations
+
+    // Convert Decimal to number for Client Components
+    return quotations.map(q => ({
+      ...q,
+      totalAmount: q.totalAmount.toNumber()
+    }))
   } catch (error) {
-    console.error('Error fetching quotations:', error)
+    // eslint-disable-next-line no-console
+    console.log('Error fetching quotations:', error)
     return []
   }
 }

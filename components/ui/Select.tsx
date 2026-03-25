@@ -1,4 +1,5 @@
 import { forwardRef, type SelectHTMLAttributes } from 'react'
+
 import { cn } from '@/lib/utils'
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
@@ -8,7 +9,7 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className, label, error, options, ...props }, ref) => {
+  ({ className, error, label, options, ...props }, ref) => {
     return (
       <div className="space-y-2">
         {label && (
@@ -18,16 +19,16 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         )}
         <div className="relative">
           <select
-            ref={ref}
             className={cn(
               'w-full rounded-xl border border-dark-border bg-dark-elevated px-4 py-3.5',
               'cursor-pointer appearance-none text-text-primary',
               'focus:border-primary focus:ring-2 focus:ring-primary/50 focus:outline-none',
               'transition-all hover:border-dark-border/80',
               error &&
-                'border-red-500 focus:border-red-500 focus:ring-red-500/50',
+              'border-red-500 focus:border-red-500 focus:ring-red-500/50',
               className
             )}
+            ref={ref}
             {...props}
           >
             {options.map((option) => (
@@ -37,12 +38,12 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             ))}
           </select>
           <div className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-text-muted">
-            <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+            <svg fill="none" height="8" viewBox="0 0 12 8" width="12">
               <path
                 d="M1 1L6 6L11 1"
                 stroke="currentColor"
-                strokeWidth="2"
                 strokeLinecap="round"
+                strokeWidth="2"
               />
             </svg>
           </div>
