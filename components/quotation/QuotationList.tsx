@@ -9,7 +9,7 @@ import { formatCurrency, padFolio } from '@/lib/utils'
 import { deleteQuotation } from '@/app/quotations/actions'
 
 import { Button } from '../ui/Button'
-import { ConfirmModal } from '../ui/Modal'
+import { ConfirmModal } from '../ui/ConfirmModal'
 
 type QuotationListItem = {
   id: string

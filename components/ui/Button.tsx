@@ -1,6 +1,6 @@
 import { type ButtonHTMLAttributes, forwardRef, JSX } from 'react'
+import clsx from 'clsx/lite'
 
-import { cn } from '@/lib/utils'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
@@ -44,7 +44,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <button
-        className={cn(baseStyles, variants[variant], sizes[size], className)}
+        className={clsx(baseStyles, variants[variant], sizes[size], className)}
         disabled={disabled || loading}
         ref={ref}
         type="button"

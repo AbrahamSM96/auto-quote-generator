@@ -1,6 +1,5 @@
 import { forwardRef, type SelectHTMLAttributes } from 'react'
-
-import { cn } from '@/lib/utils'
+import clsx from 'clsx/lite'
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label?: string
@@ -19,7 +18,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         )}
         <div className="relative">
           <select
-            className={cn(
+            className={clsx(
               'w-full rounded-xl border border-dark-border bg-dark-elevated px-4 py-3.5',
               'cursor-pointer appearance-none text-text-primary',
               'focus:border-primary focus:ring-2 focus:ring-primary/50 focus:outline-none',

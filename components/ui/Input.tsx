@@ -1,6 +1,6 @@
 import { forwardRef, type InputHTMLAttributes } from 'react'
+import clsx from 'clsx/lite'
 
-import { cn } from '@/lib/utils'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
@@ -24,7 +24,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             </div>
           )}
           <input
-            className={cn(
+            className={clsx(
               'w-full rounded-xl border border-dark-border bg-dark-elevated px-4 py-3.5',
               'text-text-primary placeholder:text-text-muted',
               'focus:border-primary focus:ring-2 focus:ring-primary/50 focus:outline-none',

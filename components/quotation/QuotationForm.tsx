@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import type {
   BodyworkItem,
+  MechanicalItem,
   PaintItem,
   PartItem,
   Quotation,
@@ -25,8 +26,11 @@ import { formatDate, formatTime, padFolio } from '@/lib/utils'
 import { quotationSchema } from '@/lib/validations'
 import { workshopConfig } from '@/config/workshop'
 
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card'
 import { Button } from '../ui/Button'
+import { Card } from '../ui/Card'
+import { CardContent } from '../ui/CardContent'
+import { CardHeader } from '../ui/CardHeader'
+import { CardTitle } from '../ui/CardTitle'
 import { Input } from '../ui/Input'
 import { Select } from '../ui/Select'
 
@@ -235,7 +239,7 @@ export function
       : [...current, serviceKey]
     setValue('services', updated)
   }
-  console.log(initialData, 'initialdata')
+
   return (
     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       {/* Header */}
@@ -691,7 +695,7 @@ export function
               4
             </div>
             <h3 className="flex items-center gap-2 text-lg font-bold text-text-primary uppercase">
-              <span className="text-xl">💡</span>
+              <span className="text-xl">🔧</span>
               {UI_TEXT.sections.mechanical}
             </h3>
           </div>
@@ -703,28 +707,28 @@ export function
           </span>
         </div>
         <div className="space-y-3 p-6">
-          {partFields.map((field, index) => (
+          {mechanicalFields.map((mechanical, index) => (
             <div
               className="group flex items-center gap-3 rounded-xl border border-dark-border/50 bg-dark-elevated p-4 transition-colors hover:border-primary/30"
-              key={field.id}
+              key={mechanical.id}
             >
               <Input
-                {...register(`partItems.${index}.description`)}
+                {...register(`mechanicalItems.${index}.description`)}
                 className="flex-1"
-                error={errors.partItems?.[index]?.description?.message}
-                placeholder={UI_TEXT.placeholders.partDescription}
+                error={errors.mechanicalItems?.[index]?.description?.message}
+                placeholder={UI_TEXT.placeholders.mechanicalDescription}
               />
               <Input
-                {...register(`partItems.${index}.cost`)}
+                {...register(`mechanicalItems.${index}.cost`)}
                 className="w-32 text-right font-technical"
-                error={errors.partItems?.[index]?.cost?.message}
+                error={errors.mechanicalItems?.[index]?.cost?.message}
                 placeholder="$0.00"
                 step="0.01"
                 type="number"
               />
               <button
                 className="h-10 w-10 rounded-lg bg-red-500/10 text-red-400 opacity-0 transition-colors group-hover:opacity-100 hover:bg-red-500/20"
-                onClick={() => removePart(index)}
+                onClick={() => removeMechanical(index)}
                 type="button"
               >
                 ×
@@ -734,11 +738,11 @@ export function
           <button
             className="w-full rounded-xl border-2 border-dashed border-dark-border py-4 font-medium text-text-secondary transition-all duration-200 hover:border-primary hover:bg-primary/5 hover:text-primary"
             onClick={() =>
-              appendPart({ cost: 0, description: '', id: crypto.randomUUID(), })
+              appendMechanical({ cost: 0, description: '', id: crypto.randomUUID(), })
             }
             type="button"
           >
-            {UI_TEXT.buttons.addPart}
+            {UI_TEXT.buttons.addMechanical}
           </button>
         </div>
       </div>

@@ -199,3 +199,20 @@ textarea {
     linear-gradient(90deg, rgba(239, 68, 68, 0.05) 1px, transparent 1px);
   background-size: 20px 20px;
 }
+
+/* Shadow utility classes */
+.shadow-glow {
+  box-shadow: var(--shadow-glow);
+}
+
+.shadow-glow-sm {
+  box-shadow: var(--shadow-glow-sm);
+}
+
+.shadow-glow-lg {
+  box-shadow: var(--shadow-glow-lg);
+}
+
+.drop-shadow-glow {
+  filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.3));
+}

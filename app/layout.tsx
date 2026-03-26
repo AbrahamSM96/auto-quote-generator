@@ -34,7 +34,9 @@ export default function RootLayout({
   children: React.ReactNode
 }>): React.ReactElement {
   return (
-    <html lang="es-MX">
+    <html data-lt-installed="true" lang="es-MX"
+      suppressHydrationWarning>
+
       <body
         className={`${jetbrainsMono.variable} ${manrope.variable} font-ui antialiased`}
       >

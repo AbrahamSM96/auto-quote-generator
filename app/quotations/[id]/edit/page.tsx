@@ -26,17 +26,11 @@ export default async function EditQuotationPage({
   const initialData = {
     ...quotation,
     downPayment:
-      typeof quotation.downPayment === 'object'
-        ? quotation.downPayment.toNumber()
-        : quotation.downPayment,
+      quotation.downPayment,
     remainingBalance:
-      typeof quotation.remainingBalance === 'object'
-        ? quotation.remainingBalance.toNumber()
-        : quotation.remainingBalance,
+      quotation.remainingBalance,
     totalAmount:
-      typeof quotation.totalAmount === 'object'
-        ? quotation.totalAmount.toNumber()
-        : quotation.totalAmount,
+      quotation.totalAmount
   }
 
   return (
