@@ -21,6 +21,12 @@ export type PartItem = {
   cost: number
 }
 
+export type MechanicalItem = {
+  id: string
+  description: string
+  cost: number
+}
+
 export type QuotationFormData = {
   // Client
   clientName: string
@@ -46,6 +52,7 @@ export type QuotationFormData = {
   bodyworkItems: BodyworkItem[]
   paintItems: PaintItem[]
   partItems: PartItem[]
+  mechanicalItems: MechanicalItem[]
 
   // Totals
   totalAmount: number
@@ -75,6 +82,12 @@ const partItemSchema = z.object({
   id: z.string(),
 })
 
+const mechanicalItemSchema = z.object({
+  id: z.string(),
+  description: z.string().min(3, 'Descripción requerida'),
+  cost: z.coerce.number().min(0, 'Costo debe ser mayor o igual a 0'),
+})
+
 export const quotationSchema = z.object({
   // Client info
   clientName: z.string().min(3, 'Nombre debe tener al menos 3 caracteres'),
@@ -102,7 +115,7 @@ export const quotationSchema = z.object({
   bodyworkItems: z.array(bodyworkItemSchema),
   paintItems: z.array(paintItemSchema),
   partItems: z.array(partItemSchema),
-
+  mechanicalItems: z.array(mechanicalItemSchema),
   // Totals
   totalAmount: z.coerce.number().min(0),
   downPayment: z.coerce.number().min(0),

@@ -4,4 +4,5 @@ export type {
   PartItem,
   QuotationFormData,
   Quotation,
+  MechanicalItem,
 } from './quotation'

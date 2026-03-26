@@ -1,6 +1,8 @@
 export const SERVICES = [
   { icon: '💥', key: 'collision', label: 'Golpe / Colisión' },
   { icon: '🔧', key: 'mechanical', label: 'Mecánica' },
+  { icon: '⚙️', key: 'tuning', label: 'Afinación' },
+  { icon: '🛢️', key: 'oilChange', label: 'Cambio de aceite' },
   { icon: '🎨', key: 'fullPaint', label: 'Baño de Pintura' },
   { icon: '🖌️', key: 'panelPaint', label: 'Repintado (Piezas)' },
   { icon: '🔧', key: 'pdr', label: 'Varillaje (Granizo)' },
@@ -53,6 +55,7 @@ export const VEHICLE_BRANDS = [
 export const UI_TEXT = {
   buttons: {
     addBodywork: '+ LABOR HOJALATERÍA',
+    addMechanical: '+ AGREGAR MECÁNICA',
     addPaint: '+ PIEZA PINTURA',
     addPart: '+ AGREGAR REPUESTO',
     back: 'Volver',
@@ -80,6 +83,7 @@ export const UI_TEXT = {
     clientEmail: 'Ej. cliente@email.com',
     clientName: 'Ej. Carlos Eduardo Ramírez López',
     clientPhone: 'Ej. 3339658258',
+    mechanicalDescription: 'Descripción de la reparación mecánica',
     paintPart: 'Pieza a pintar',
     partDescription: 'Descripción del repuesto',
     vehicleColor: 'Ej. Gris Oxford',
