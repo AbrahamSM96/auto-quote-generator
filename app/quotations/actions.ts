@@ -3,7 +3,14 @@
 
 import { revalidatePath } from 'next/cache'
 
-import type { Quotation, QuotationFormData } from '@/types'
+import type {
+  BodyworkItem,
+  MechanicalItem,
+  PaintItem,
+  PartItem,
+  Quotation,
+  QuotationFormData,
+} from '@/types'
 import { prisma } from '@/lib/prisma'
 import { quotationSchema } from '@/lib/validations'
 
@@ -58,6 +65,7 @@ export async function createQuotation(
         bodyworkItems: validated.bodyworkItems,
         paintItems: validated.paintItems,
         partItems: validated.partItems,
+        mechanicalItems: validated.mechanicalItems,
 
         // Totals
         totalAmount: validated.totalAmount,
@@ -126,6 +134,7 @@ export async function updateQuotation(
         totalAmount: validated.totalAmount,
         downPayment: validated.downPayment,
         remainingBalance: validated.remainingBalance,
+        mechanicalItems: validated.mechanicalItems,
       },
     })
 
@@ -174,12 +183,18 @@ export async function getQuotation(id: string): Promise<Quotation | null> {
 
     if (!quotation) return null
 
-    // Convert Decimal to number for Client Components
+    // Convert Decimal to number and JSON to proper types for Client Components
     return {
       ...quotation,
       totalAmount: quotation.totalAmount.toNumber(),
       downPayment: quotation.downPayment.toNumber(),
       remainingBalance: quotation.remainingBalance.toNumber(),
+      customService: quotation.customService ?? '',
+      services: quotation.services as string[],
+      bodyworkItems: quotation.bodyworkItems as unknown as BodyworkItem[],
+      paintItems: quotation.paintItems as unknown as PaintItem[],
+      partItems: quotation.partItems as unknown as PartItem[],
+      mechanicalItems: quotation.mechanicalItems as unknown as MechanicalItem[],
     }
   } catch (error) {
     // eslint-disable-next-line no-console

@@ -34,6 +34,7 @@ interface QuotationListProps {
 export function QuotationList({ quotations }: QuotationListProps): JSX.Element {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
   const [deleteModal, setDeleteModal] = useState<{
     isOpen: boolean
     quotation: QuotationListItem | null
@@ -42,6 +43,8 @@ export function QuotationList({ quotations }: QuotationListProps): JSX.Element {
     quotation: null,
   })
 
+  const itemsPerPage = 10
+
   const filtered = quotations.filter(
     (q) =>
       q.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -49,6 +52,32 @@ export function QuotationList({ quotations }: QuotationListProps): JSX.Element {
       q.vehicleModel.toLowerCase().includes(searchTerm.toLowerCase()) ||
       padFolio(q.folio).includes(searchTerm)
   )
+
+  // Reset to page 1 when search term changes
+  /**
+   * handleSearch - Updates the search term state and resets the current page to 1 whenever the user types in the search input. This ensures that the user always starts from the first page of results when performing a new search.
+   *
+   * @param value - The new search term entered by the user
+   */
+  const handleSearch = (value: string): void => {
+    setSearchTerm(value)
+    setCurrentPage(1)
+  }
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filtered.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedQuotations = filtered.slice(startIndex, endIndex)
+
+  /**
+   * goToPage - Navigates to a specific page number in the pagination. It ensures that the page number is within valid bounds (between 1 and totalPages) before updating the currentPage state.
+   *
+   * @param page - The page number to navigate to
+   */
+  const goToPage = (page: number): void => {
+    setCurrentPage(Math.max(1, Math.min(page, totalPages)))
+  }
 
   /**
    * handleDelete is an asynchronous function that deletes a quotation when the user confirms the deletion in the modal. It calls the deleteQuotation action with the quotation ID, shows a success or error toast based on the result, and refreshes the page to update the list of quotations.
@@ -99,7 +128,7 @@ export function QuotationList({ quotations }: QuotationListProps): JSX.Element {
             </div>
             <input
               className="w-full rounded-xl border border-dark-border bg-dark-elevated py-3.5 pr-4 pl-12 text-text-primary placeholder:text-text-muted focus:border-primary focus:ring-2 focus:ring-primary/50 focus:outline-none"
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => handleSearch(e.target.value)}
               placeholder="Buscar por cliente, vehículo o folio..."
               type="text"
               value={searchTerm}
@@ -133,7 +162,7 @@ export function QuotationList({ quotations }: QuotationListProps): JSX.Element {
               </tr>
             </thead>
             <tbody className="divide-y divide-dark-border">
-              {filtered.map((quotation) => {
+              {paginatedQuotations.map((quotation) => {
                 const total =
                   typeof quotation.totalAmount === 'object'
                     ? quotation.totalAmount.toNumber()
@@ -221,6 +250,103 @@ export function QuotationList({ quotations }: QuotationListProps): JSX.Element {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination */}
+        {filtered.length > 0 && (
+          <div className="flex items-center justify-between border-t border-dark-border/50 px-6 py-4">
+            {/* Results info */}
+            <div className="text-sm text-text-secondary">
+              Mostrando{' '}
+              <span className="font-semibold text-text-primary">
+                {startIndex + 1}
+              </span>{' '}
+              -{' '}
+              <span className="font-semibold text-text-primary">
+                {Math.min(endIndex, filtered.length)}
+              </span>{' '}
+              de{' '}
+              <span className="font-semibold text-text-primary">
+                {filtered.length}
+              </span>{' '}
+              cotizaciones
+            </div>
+
+            {/* Page navigation */}
+            {totalPages > 1 && (
+              <div className="flex items-center gap-2">
+                <Button
+                  disabled={currentPage === 1}
+                  onClick={() => goToPage(1)}
+                  size="sm"
+                  variant="ghost"
+                >
+                  ««
+                </Button>
+                <Button
+                  disabled={currentPage === 1}
+                  onClick={() => goToPage(currentPage - 1)}
+                  size="sm"
+                  variant="ghost"
+                >
+                  ‹
+                </Button>
+
+                {/* Page numbers */}
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter((page) => {
+                      // Show first, last, current, and 1 page before/after current
+                      return (
+                        page === 1 ||
+                        page === totalPages ||
+                        Math.abs(page - currentPage) <= 1
+                      )
+                    })
+                    .map((page, index, array) => {
+                      // Add ellipsis if there's a gap
+                      const showEllipsisBefore =
+                        index > 0 && page - array[index - 1] > 1
+
+                      return (
+                        <div className="flex items-center gap-1" key={page}>
+                          {showEllipsisBefore && (
+                            <span className="px-2 text-text-muted">...</span>
+                          )}
+                          <button
+                            className={`h-8 w-8 rounded-lg text-sm font-medium transition-colors ${currentPage === page
+                              ? 'bg-primary text-white'
+                              : 'text-text-secondary hover:bg-dark-elevated hover:text-text-primary'
+                              }`}
+                            onClick={() => goToPage(page)}
+                            type="button"
+                          >
+                            {page}
+                          </button>
+                        </div>
+                      )
+                    })}
+                </div>
+
+                <Button
+                  disabled={currentPage === totalPages}
+                  onClick={() => goToPage(currentPage + 1)}
+                  size="sm"
+                  variant="ghost"
+                >
+                  ›
+                </Button>
+                <Button
+                  disabled={currentPage === totalPages}
+                  onClick={() => goToPage(totalPages)}
+                  size="sm"
+                  variant="ghost"
+                >
+                  »»
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
 
         {filtered.length === 0 && searchTerm && (
           <div className="p-12 text-center">
