@@ -72,6 +72,76 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+## 🗄️ Database Commands
+
+### Common Prisma Commands
+
+#### Create a new migration (after schema changes)
+
+```bash
+bunx prisma migrate dev --name your_migration_name
+```
+
+Use this when you:
+
+- Add new fields to existing models
+- Create new tables/models
+- Modify field types or constraints
+- Add indexes or relations
+
+Examples:
+
+```bash
+bunx prisma migrate dev --name add_status_field
+bunx prisma migrate dev --name create_payments_table
+bunx prisma migrate dev --name add_user_email_index
+```
+
+#### Generate Prisma Client (without migration)
+
+```bash
+bunx prisma generate
+```
+
+Use this when you only need to regenerate TypeScript types without changing the database schema.
+
+#### Open Prisma Studio (visual database browser)
+
+```bash
+bunx prisma studio
+```
+
+Opens a web interface at [http://localhost:5555](http://localhost:5555) to view and edit your database records.
+
+#### Reset database (⚠️ deletes all data)
+
+```bash
+bunx prisma migrate reset
+```
+
+This will:
+
+- Drop the database
+- Recreate it
+- Run all migrations
+- Seed the database (if seed script exists)
+
+#### View migration status
+
+```bash
+bunx prisma migrate status
+```
+
+Shows which migrations have been applied.
+
+#### Deploy migrations (production)
+
+```bash
+bunx prisma migrate deploy
+```
+
+Use this in production to apply pending migrations.
+
 ## 📁 Project Structure
 
 ```

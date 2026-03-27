@@ -3,8 +3,8 @@
 
 import { revalidatePath } from 'next/cache'
 
-import { prisma } from '@/lib/prisma'
 import type { Quotation, QuotationFormData } from '@/types'
+import { prisma } from '@/lib/prisma'
 import { quotationSchema } from '@/lib/validations'
 
 type ActionSuccess = {
@@ -189,6 +189,23 @@ export async function getQuotation(id: string): Promise<Quotation | null> {
 }
 
 /**
+ * getNextFolio - Get the next available folio number
+ */
+export async function getNextFolio(): Promise<number> {
+  try {
+    const lastQuotation = await prisma.quotation.findFirst({
+      orderBy: { folio: 'desc' },
+      select: { folio: true },
+    })
+    return (lastQuotation?.folio ?? 0) + 1
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log('Error fetching next folio:', error)
+    return 1
+  }
+}
+
+/**
  * getQuotations
  */
 export async function getQuotations(): Promise<
@@ -217,9 +234,9 @@ export async function getQuotations(): Promise<
     })
 
     // Convert Decimal to number for Client Components
-    return quotations.map(q => ({
+    return quotations.map((q) => ({
       ...q,
-      totalAmount: q.totalAmount.toNumber()
+      totalAmount: q.totalAmount.toNumber(),
     }))
   } catch (error) {
     // eslint-disable-next-line no-console

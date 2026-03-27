@@ -1,6 +1,6 @@
 'use client'
 
-import { JSX, useEffect } from 'react'
+import { JSX, useEffect, useState } from 'react'
 import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import type { Resolver } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -15,7 +15,7 @@ import type {
   Quotation,
   QuotationFormData,
 } from '@/types'
-import { createQuotation, updateQuotation } from '@/app/quotations/actions'
+import { createQuotation, getNextFolio, updateQuotation } from '@/app/quotations/actions'
 import {
   ESTIMATED_TIMES,
   SERVICES,
@@ -53,6 +53,7 @@ export function
   }: QuotationFormProps): JSX.Element {
   const router = useRouter()
   const now = new Date()
+  const [nextFolio, setNextFolio] = useState<number | null>(null)
 
   const {
     control,
@@ -155,6 +156,13 @@ export function
   const mechanicalItems = useWatch({ control, name: 'mechanicalItems' })
   const downPayment = useWatch({ control, name: 'downPayment' })
   const services = useWatch({ control, name: 'services' })
+
+  // Get next folio for new quotations
+  useEffect(() => {
+    if (mode === 'create') {
+      getNextFolio().then(setNextFolio)
+    }
+  }, [mode])
 
   // Real-time total calculations
   useEffect(() => {
@@ -268,7 +276,11 @@ export function
                 FOLIO
               </span>
               <span className="font-technical text-3xl font-black text-primary">
-                {mode === 'edit' ? padFolio(initialData?.folio || 0) : '---'}
+                {mode === 'edit'
+                  ? padFolio(initialData?.folio || 0)
+                  : nextFolio
+                    ? padFolio(nextFolio)
+                    : '---'}
               </span>
             </div>
             <p className="font-technical text-xl font-bold text-text-primary">

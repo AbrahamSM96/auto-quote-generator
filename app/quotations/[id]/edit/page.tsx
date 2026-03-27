@@ -23,6 +23,7 @@ export default async function EditQuotationPage({
     notFound()
   }
   // Transform Prisma Decimal to number for form
+  console.log(quotation, 'quotation')
   const initialData = {
     ...quotation,
     downPayment:

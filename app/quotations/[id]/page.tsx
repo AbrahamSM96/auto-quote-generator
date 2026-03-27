@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { Button } from '@/components/ui/Button'
+import { PDFButton } from '@/components/quotation/PDFButton'
 import { QuotationView } from '@/components/quotation/QuotationView'
 
 import { getQuotation } from '../actions'
@@ -35,15 +36,7 @@ export default async function QuotationViewPage({
           <Link href={`/quotations/${quotation.id}/edit`}>
             <Button variant="outline">✏️ Editar</Button>
           </Link>
-          <button
-            className="r ounded-xl bg-gradient-to-r from-primary to-red-600 px-6 py-3 font-bold text-white shadow-glow transition-all hover:shadow-glow-lg"
-            onClick={() =>
-              window.open(`/api/quotations/${quotation.id}/pdf`, '_blank')
-            }
-            type='button'
-          >
-            📄 Generar PDF
-          </button>
+          <PDFButton quotationId={quotation.id} />
         </div>
 
         <QuotationView quotation={quotation} />

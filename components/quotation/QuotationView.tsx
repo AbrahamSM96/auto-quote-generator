@@ -8,7 +8,11 @@ import { formatCurrency, formatDate, formatTime, padFolio } from '@/lib/utils'
 import { SERVICES, UI_TEXT } from '@/lib/constants'
 import { workshopConfig } from '@/config/workshop'
 
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card'
+import { Card, } from '../ui/Card'
+import { CardContent, } from '../ui/CardContent'
+import { CardHeader } from '../ui/CardHeader'
+import { CardTitle } from '../ui/CardTitle'
+
 
 interface QuotationViewProps {
   quotation: Quotation
