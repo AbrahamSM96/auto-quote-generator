@@ -78,3 +78,6 @@ rigs/*/.turbo
 .playwright-cli
 
 next-env.d.ts
+
+# Prisma
+generated/

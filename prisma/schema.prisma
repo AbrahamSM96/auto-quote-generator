@@ -34,10 +34,10 @@ model Quotation {
   piecesToWork      Int     @default(1)
 
   // Work items (stored as JSON arrays)
-  bodyworkItems  Json   // [{id, description, cost}, ...]
-  paintItems     Json   // [{id, part, quantity, unitPrice, total}, ...]
-  partItems      Json   // [{id, description, cost}, ...]
-  mechanicalItems   Json   // [{id, description, cost}, ...]
+  bodyworkItems  Json   @default("[]")  // [{id, description, cost}, ...]
+  paintItems     Json   @default("[]")  // [{id, part, quantity, unitPrice, total}, ...]
+  partItems      Json   @default("[]")  // [{id, description, cost}, ...]
+  mechanicalItems   Json   @default("[]")  // [{id, description, cost}, ...]
 
   // Pricing
   totalAmount       Decimal @db.Decimal(10, 2)
