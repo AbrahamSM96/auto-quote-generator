@@ -9,6 +9,6 @@
  * @param props - The props for the AuthProvider component
  * @param props.children - The child components to be rendered within the AuthProvider
  */
-export function AuthProvider({ children }: { children: React.ReactElement }): React.ReactElement {
+export function AuthProvider({ children }: { children: React.ReactNode }): React.ReactNode {
   return children
 }

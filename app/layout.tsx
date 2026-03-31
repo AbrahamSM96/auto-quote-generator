@@ -35,7 +35,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactElement
+  children: React.ReactNode
 }>): React.ReactElement {
   return (
     <html data-lt-installed="true" lang="es-MX"
@@ -46,10 +46,8 @@ export default function RootLayout({
       >
         <AuthProvider>
           <AuthGuard>
-            <>
-              <HeaderWrapper />
-              {children}
-            </>
+            <HeaderWrapper />
+            {children}
           </AuthGuard>
         </AuthProvider>
         <Toaster

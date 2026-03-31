@@ -13,7 +13,7 @@ import { useSession } from '@/lib/auth-client'
  * @param props - The children components that require authentication
  * @param props.children - The components to render if the user is authenticated
  */
-export function AuthGuard({ children }: { children: React.ReactElement }): React.ReactElement {
+export function AuthGuard({ children }: { children: React.ReactNode }): React.ReactNode {
   const router = useRouter()
   const pathname = usePathname()
   const { data: session, isPending } = useSession()
