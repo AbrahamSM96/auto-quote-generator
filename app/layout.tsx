@@ -3,6 +3,10 @@ import { JetBrains_Mono, Manrope } from 'next/font/google'
 import type { Metadata } from 'next'
 import { Toaster } from 'sonner'
 
+import { AuthGuard } from '@/components/auth/AuthGuard'
+import { AuthProvider } from '@/components/providers/AuthProvider'
+import { HeaderWrapper } from '@/components/layout/HeaderWrapper'
+
 const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
   subsets: ['latin'],
@@ -31,7 +35,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactElement
 }>): React.ReactElement {
   return (
     <html data-lt-installed="true" lang="es-MX"
@@ -40,7 +44,14 @@ export default function RootLayout({
       <body
         className={`${jetbrainsMono.variable} ${manrope.variable} font-ui antialiased`}
       >
-        {children}
+        <AuthProvider>
+          <AuthGuard>
+            <>
+              <HeaderWrapper />
+              {children}
+            </>
+          </AuthGuard>
+        </AuthProvider>
         <Toaster
           closeButton
           position="top-right"

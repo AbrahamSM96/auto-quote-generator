@@ -30,7 +30,7 @@ export async function GET(
     const pdfDoc = QuotationPDF({ quotation })
     const pdfBuffer = await pdf(pdfDoc).toBuffer()
 
-    return new NextResponse(pdfBuffer, {
+    return new NextResponse(pdfBuffer as unknown as BodyInit, {
       headers: {
         'Content-Disposition': `attachment; filename="Cotizacion-${padFolio(quotation.folio)}.pdf"`,
         'Content-Type': 'application/pdf',

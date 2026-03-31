@@ -7,6 +7,65 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  name          String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  quotations    Quotation[]
+
+  @@index([email])
+}
+
+model Account {
+  id                String    @id @default(cuid())
+  userId            String
+  accountId         String
+  providerId        String
+  accessToken       String?
+  refreshToken      String?
+  idToken           String?
+  expiresAt         DateTime?
+  password          String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+
+  @@unique([identifier, value])
+}
+
 model Quotation {
   id        String   @id @default(cuid())
   folio     Int      @unique @default(autoincrement())
@@ -44,6 +103,10 @@ model Quotation {
   downPayment       Decimal @db.Decimal(10, 2) @default(0)
   remainingBalance  Decimal @db.Decimal(10, 2)
 
+  // User relationship
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+
   // Timestamps
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -53,4 +116,5 @@ model Quotation {
   @@index([clientName])
   @@index([vehicleBrand])
   @@index([createdAt])
+  @@index([userId])
 }

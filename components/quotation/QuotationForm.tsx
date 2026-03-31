@@ -530,7 +530,6 @@ export function
                 className="w-32 text-right font-technical"
                 error={errors.bodyworkItems?.[index]?.cost?.message}
                 placeholder="$0.00"
-                step="0.01"
                 type="number"
               />
               <button
@@ -601,7 +600,6 @@ export function
                 className="w-28 text-right font-technical"
                 error={errors.paintItems?.[index]?.unitPrice?.message}
                 placeholder="P. Unit."
-                step="0.01"
                 type="number"
               />
               <Input
@@ -609,7 +607,6 @@ export function
                 className="w-32 bg-dark-bg text-right font-technical"
                 placeholder="$0.00"
                 readOnly
-                step="0.01"
                 type="number"
               />
               <button
@@ -675,7 +672,6 @@ export function
                 className="w-32 text-right font-technical"
                 error={errors.partItems?.[index]?.cost?.message}
                 placeholder="$0.00"
-                step="0.01"
                 type="number"
               />
               <button
@@ -735,7 +731,6 @@ export function
                 className="w-32 text-right font-technical"
                 error={errors.mechanicalItems?.[index]?.cost?.message}
                 placeholder="$0.00"
-                step="0.01"
                 type="number"
               />
               <button
@@ -781,7 +776,6 @@ export function
             <input
               {...register('downPayment')}
               className="w-full rounded-xl border-2 border-primary/30 bg-dark-bg py-3 text-center font-technical text-3xl font-bold text-text-primary focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
-              step="0.01"
               type="number"
             />
           </div>

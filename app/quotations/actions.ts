@@ -11,6 +11,7 @@ import type {
   Quotation,
   QuotationFormData,
 } from '@/types'
+import { getSession } from '@/lib/auth-helpers'
 import { prisma } from '@/lib/prisma'
 import { quotationSchema } from '@/lib/validations'
 
@@ -36,11 +37,18 @@ export async function createQuotation(
   data: QuotationFormData
 ): Promise<ActionResult> {
   try {
+    // Check authentication
+    const session = await getSession()
+    const userId = session.user.id
+
     // Validate data on server
     const validated = quotationSchema.parse(data)
 
     const quotation = await prisma.quotation.create({
       data: {
+        // User
+        userId: userId,
+
         // Client
         clientName: validated.clientName,
         clientPhone: validated.clientPhone,
@@ -109,6 +117,9 @@ export async function updateQuotation(
   data: QuotationFormData
 ): Promise<ActionResult> {
   try {
+    // Check authentication
+    await getSession()
+
     const validated = quotationSchema.parse(data)
 
     await prisma.quotation.update({
@@ -159,6 +170,9 @@ export async function updateQuotation(
 // oxlint-disable-next-line typescript/explicit-module-boundary-types
 export async function deleteQuotation(id: string) {
   try {
+    // Check authentication
+    await getSession()
+
     await prisma.quotation.delete({ where: { id } })
     revalidatePath('/')
     return { success: true }
@@ -179,6 +193,9 @@ export async function deleteQuotation(id: string) {
  */
 export async function getQuotation(id: string): Promise<Quotation | null> {
   try {
+    // Check authentication
+    await getSession()
+
     const quotation = await prisma.quotation.findUnique({ where: { id } })
 
     if (!quotation) return null
@@ -235,6 +252,9 @@ export async function getQuotations(): Promise<
   }>
 > {
   try {
+    // Check authentication
+    await getSession()
+
     const quotations = await prisma.quotation.findMany({
       orderBy: { createdAt: 'desc' },
       select: {
