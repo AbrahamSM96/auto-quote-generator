@@ -1,11 +1,14 @@
 import './globals.css'
+
 import { JetBrains_Mono, Manrope } from 'next/font/google'
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { Toaster } from 'sonner'
 
 import { AuthGuard } from '@/components/auth/AuthGuard'
 import { AuthProvider } from '@/components/providers/AuthProvider'
 import { HeaderWrapper } from '@/components/layout/HeaderWrapper'
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 
 const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
@@ -45,10 +48,12 @@ export default function RootLayout({
         className={`${jetbrainsMono.variable} ${manrope.variable} font-ui antialiased`}
       >
         <AuthProvider>
-          <AuthGuard>
-            <HeaderWrapper />
-            {children}
-          </AuthGuard>
+          <Suspense fallback={<LoadingSpinner />}>
+            <AuthGuard>
+              <HeaderWrapper />
+              {children}
+            </AuthGuard>
+          </Suspense>
         </AuthProvider>
         <Toaster
           closeButton

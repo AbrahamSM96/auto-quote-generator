@@ -34,9 +34,14 @@ export function AuthGuard({ children }: { children: React.ReactNode }): React.Re
   }, [session, isPending, isPublicRoute, pathname, router])
 
   if (isPending || (!session && !isPublicRoute) || (session && isPublicRoute)) {
+    // Show minimal loading state to avoid flash
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-lg">Cargando...</div>
+      <div className="flex min-h-screen items-center justify-center bg-dark-bg">
+        <div className="flex items-center gap-2">
+          <div className="h-2 w-2 animate-pulse rounded-full bg-primary" />
+          <div className="h-2 w-2 animate-pulse rounded-full bg-primary delay-75" />
+          <div className="h-2 w-2 animate-pulse rounded-full bg-primary delay-150" />
+        </div>
       </div>
     )
   }
