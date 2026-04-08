@@ -16,10 +16,14 @@
     "lint:fix": "oxlint --fix .",
     "format": "oxfmt --write .",
     "check": "bun run lint:fix && bun run format",
+    "test": "bunx jest --coverage",
+    "test:watch": "bunx jest --watch",
+    "test:coverage": "bunx jest --coverage",
     "postinstall": "prisma generate",
     "migrate:quotations": "bun run scripts/migrate-quotations.ts",
     "dev:reset-master": "bun run scripts/reset-master-user.ts",
-    "dev:check-users": "bun run scripts/check-users.ts"
+    "dev:check-users": "bun run scripts/check-users.ts",
+    "dev:reset-folios": "bun run scripts/reset-folios.ts"
   },
   "dependencies": {
     "@eslint/compat": "1.3.2",
@@ -59,7 +63,11 @@
   "devDependencies": {
     "@eslint/js": "9.39.1",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/bcryptjs": "^3.0.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -68,9 +76,12 @@
     "eslint-config-next": "16.1.6",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-react": "7.37.5",
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.3.0",
     "oxfmt": "^0.41.0",
     "oxlint": "^1.56.0",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
   "engines": {

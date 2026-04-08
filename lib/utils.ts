@@ -1,15 +1,3 @@
-import { type ClassValue, clsx } from 'clsx/lite'
-import { twMerge } from 'tailwind-merge'
-
-/**
- * cn - Combines class names using clsx and tailwind-merge.
- *
- * @param {...any} inputs - A list of class names or class name objects to combine.
- */
-export function cn(...inputs: ClassValue[]): string {
-  return twMerge(clsx(inputs))
-}
-
 /**
  * formatCurrency - Formats a number or string as a currency value in Mexican Pesos (MXN).
  *
@@ -38,8 +26,8 @@ export function formatDate(date: Date | string): string {
     weekday: 'long',
     year: 'numeric',
   })
-    .format(dateObj)
-    .toUpperCase()
+    ?.format(dateObj)
+    ?.toUpperCase()
 }
 
 /**

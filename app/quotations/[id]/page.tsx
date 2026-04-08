@@ -1,4 +1,3 @@
-import { JSX } from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -18,7 +17,7 @@ export default async function QuotationViewPage({
   params,
 }: {
   params: Promise<{ id: string }>
-}): Promise<JSX.Element> {
+}): Promise<React.ReactElement> {
   const { id } = await params
   const quotation = await getQuotation(id)
 

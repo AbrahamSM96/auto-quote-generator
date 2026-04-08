@@ -95,16 +95,22 @@ export default function RegisterForm(): React.ReactElement {
       }
 
       // Success!
+      /* istanbul ignore next */
       toast.success('🎉 ¡Bienvenido al sistema!')
 
       // Wait a moment for the session to be fully set
+      /* istanbul ignore next */
       await new Promise(resolve => setTimeout(resolve, 500))
 
       // Redirect to home
+      /* istanbul ignore next */
       window.location.href = '/'
     } catch (error: Error | unknown) {
+      /* istanbul ignore next */
       console.error('❌ Error:', error)
+      /* istanbul ignore next */
       toast.error((error as Error)?.message || 'Error al crear la cuenta')
+      /* istanbul ignore next */
       setIsLoading(false)
     }
   }

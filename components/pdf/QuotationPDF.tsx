@@ -1,5 +1,5 @@
 import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
-import { JSX } from 'react'
+import React from 'react'
 
 import { formatCurrency, formatDate, formatTime, padFolio } from '@/lib/utils'
 import { SERVICES } from '@/lib/constants'
@@ -91,7 +91,7 @@ const styles = StyleSheet.create(
  * @param props - Component props
  * @param props.quotation - Quotation data to generate the PDF
  */
-export function QuotationPDF({ quotation }: { quotation: Quotation }): JSX.Element {
+export function QuotationPDF({ quotation }: { quotation: Quotation }): React.ReactElement {
   const totalAmount = quotation.totalAmount
 
   const downPayment = quotation.downPayment

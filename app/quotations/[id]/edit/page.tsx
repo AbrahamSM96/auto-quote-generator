@@ -1,4 +1,3 @@
-import type { JSX } from 'react'
 import { notFound } from 'next/navigation'
 
 import { QuotationForm } from '@/components/quotation/QuotationForm'
@@ -15,7 +14,7 @@ export default async function EditQuotationPage({
   params,
 }: {
   params: Promise<{ id: string }>
-}): Promise<JSX.Element> {
+}): Promise<React.ReactElement> {
   const { id } = await params
   const quotation = await getQuotation(id)
 

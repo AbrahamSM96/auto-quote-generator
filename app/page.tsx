@@ -1,4 +1,3 @@
-import { JSX } from 'react'
 import Link from 'next/link'
 
 import { Button } from '@/components/ui/Button'
@@ -9,7 +8,7 @@ import { getQuotations } from './quotations/actions'
 /**
  * HomePage
  */
-export default async function HomePage(): Promise<JSX.Element> {
+export default async function HomePage(): Promise<React.ReactElement> {
   const quotations = await getQuotations()
 
   return (

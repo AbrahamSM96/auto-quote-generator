@@ -1,7 +1,6 @@
 'use client'
 
 import clsx from 'clsx/lite'
-import type { JSX } from 'react'
 import { useEffect } from 'react'
 
 interface ModalProps {
@@ -25,7 +24,7 @@ export function Modal({
   className,
   isOpen,
   onClose,
-}: ModalProps): JSX.Element | null {
+}: ModalProps): React.ReactElement | null {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'

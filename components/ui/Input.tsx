@@ -25,7 +25,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
           <input
             className={clsx(
-              'w-full rounded-xl border border-dark-border bg-dark-elevated px-4 py-3.5',
+              'w-full rounded-xl border border-dark-border bg-dark-elevated px-4 py-3.5 capitalize',
               'text-text-primary placeholder:text-text-muted',
               'focus:border-primary focus:ring-2 focus:ring-primary/50 focus:outline-none',
               'transition-all hover:border-dark-border/80',

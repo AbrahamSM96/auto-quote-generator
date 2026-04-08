@@ -1,8 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 'use client'
 
-import { JSX } from 'react'
-
 import type { BodyworkItem, PaintItem, PartItem, Quotation } from '@/types'
 import { formatCurrency, formatDate, formatTime, padFolio } from '@/lib/utils'
 import { SERVICES, UI_TEXT } from '@/lib/constants'
@@ -24,7 +22,7 @@ interface QuotationViewProps {
  * @param props - The component props
  * @param props.quotation - The quotation data to display in the view
  */
-export function QuotationView({ quotation }: QuotationViewProps): JSX.Element {
+export function QuotationView({ quotation }: QuotationViewProps): React.ReactElement {
   const bodyworkItems = quotation.bodyworkItems as BodyworkItem[]
   const paintItems = quotation.paintItems as PaintItem[]
   const partItems = quotation.partItems as PartItem[]

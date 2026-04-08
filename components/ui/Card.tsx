@@ -1,5 +1,5 @@
-import type { HTMLAttributes, JSX } from 'react'
 import clsx from 'clsx/lite'
+import type { HTMLAttributes } from 'react'
 
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
@@ -19,7 +19,7 @@ export function Card({
   className,
   glass = true,
   ...props
-}: CardProps): JSX.Element {
+}: CardProps): React.ReactElement {
   return (
     <div
       className={clsx(

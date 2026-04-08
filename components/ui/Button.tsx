@@ -1,4 +1,4 @@
-import { type ButtonHTMLAttributes, forwardRef, JSX } from 'react'
+import { type ButtonHTMLAttributes, forwardRef } from 'react'
 import clsx from 'clsx/lite'
 
 
@@ -20,7 +20,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ...props
     },
     ref
-  ): JSX.Element => {
+  ): React.ReactElement => {
     const baseStyles =
       'inline-flex items-center justify-center gap-2 font-medium rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
 

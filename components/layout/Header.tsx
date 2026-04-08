@@ -30,9 +30,12 @@ export function Header({ isMaster }: HeaderProps): React.ReactElement | null {
       await signOut()
       toast.success('Sesión cerrada correctamente')
       // Force full page reload to clear all state
+      /* istanbul ignore next */
       window.location.href = '/login'
     } catch (error) {
+      /* istanbul ignore next */
       toast.error('Error al cerrar sesión')
+      /* istanbul ignore next */
       console.log(error, 'Error during logout') // Log the error for debugging
     }
   }

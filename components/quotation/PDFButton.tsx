@@ -1,7 +1,5 @@
 'use client'
 
-import { JSX } from 'react'
-
 interface PDFButtonProps {
   quotationId: string
 }
@@ -12,7 +10,7 @@ interface PDFButtonProps {
  * @param props - Component props
  * @param props.quotationId - The ID of the quotation to generate PDF for
  */
-export function PDFButton({ quotationId }: PDFButtonProps): JSX.Element {
+export function PDFButton({ quotationId }: PDFButtonProps): React.ReactElement {
   /**
    * handleClick - Open the PDF in a new tab when the button is clicked
    */

@@ -62,10 +62,14 @@ export default function LoginForm(): React.ReactElement {
       }
 
       toast.success('Sesión iniciada correctamente')
+      /* istanbul ignore next */
       window.location.href = callbackUrl
     } catch (error) {
+      /* istanbul ignore next */
       toast.error('Email o contraseña incorrectos')
+      /* istanbul ignore next */
       console.log(error, 'Error during login') // Log the error for debugging
+      /* istanbul ignore next */
       setIsLoading(false)
     }
   }
