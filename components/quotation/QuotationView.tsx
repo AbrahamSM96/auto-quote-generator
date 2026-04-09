@@ -1,5 +1,4 @@
 /* eslint-disable react/no-array-index-key */
-'use client'
 
 import type { BodyworkItem, PaintItem, PartItem, Quotation } from '@/types'
 import { formatCurrency, formatDate, formatTime, padFolio } from '@/lib/utils'

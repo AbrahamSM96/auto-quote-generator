@@ -7,6 +7,9 @@ import { QuotationView } from '@/components/quotation/QuotationView'
 
 import { getQuotation } from '../actions'
 
+// Force dynamic rendering because this page uses authentication
+export const dynamic = 'force-dynamic'
+
 /**
  * QuotationViewPage
  *

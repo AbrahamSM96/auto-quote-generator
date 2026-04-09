@@ -5,7 +5,8 @@ interface PDFButtonProps {
 }
 
 /**
- * PDFButton - Client component for generating PDF
+ * PDFButton - Minimal client component for PDF generation
+ * Opens PDF in new tab using browser's native PDF viewer
  *
  * @param props - Component props
  * @param props.quotationId - The ID of the quotation to generate PDF for

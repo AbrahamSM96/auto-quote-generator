@@ -4,6 +4,9 @@ import { QuotationForm } from '@/components/quotation/QuotationForm'
 
 import { getQuotation } from '../../actions'
 
+// Force dynamic rendering because this page uses authentication
+export const dynamic = 'force-dynamic'
+
 /**
  * EditQuotationPage
  *

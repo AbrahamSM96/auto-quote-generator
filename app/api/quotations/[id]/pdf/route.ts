@@ -1,3 +1,4 @@
+import ReactPDF from '@react-pdf/renderer/lib/react-pdf'
 /* eslint-disable no-console */
 import { type NextRequest, NextResponse } from 'next/server'
 import { pdf } from '@react-pdf/renderer'
@@ -27,8 +28,12 @@ export async function GET(
       return new NextResponse('Quotation not found', { status: 404 })
     }
 
-    const pdfDoc = QuotationPDF({ quotation })
-    const pdfBuffer = await pdf(pdfDoc).toBuffer()
+    const pdfDoc = QuotationPDF({
+      quotation,
+    }) as unknown as (typeof ReactPDF)['PDFRenderer']
+    const pdfBuffer = await pdf(
+      pdfDoc as unknown as (typeof ReactPDF)['PDFRenderer']
+    ).toBuffer()
 
     return new NextResponse(pdfBuffer as unknown as BodyInit, {
       headers: {

@@ -32,6 +32,7 @@ export default [
       'global.d.ts',
       '**/__generated__/**',
       'jest.config.js',
+      '**/jest.setup.ts',
       'index.d.ts',
       'public/gtm/gtm.js',
       'public/jwplayer/jwplayer.js',

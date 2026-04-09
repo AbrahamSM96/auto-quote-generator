@@ -1,15 +1,14 @@
 import { checkIsMasterUser, getCurrentUser } from '@/app/actions/user-actions'
 
-import { Header } from './Header'
+import { HeaderServer } from './HeaderServer'
 
 /**
  * HeaderWrapper Component
  *
- * This component is responsible for fetching the current user's information and determining if they are a Master user.
- * It then renders the Header component with the appropriate props based on the user's role.
- * If there is no authenticated user, it returns null, effectively hiding the header.
+ * Server Component that fetches user information and delegates rendering to HeaderServer.
+ * Optimized to reduce client-side JavaScript by using Server Components.
  *
- * @returns The Header component with the isMaster prop or null if no user is authenticated
+ * @returns The HeaderServer component with user data or null if not authenticated
  */
 export async function HeaderWrapper(): Promise<React.ReactElement | null> {
   const user = await getCurrentUser()
@@ -20,5 +19,14 @@ export async function HeaderWrapper(): Promise<React.ReactElement | null> {
   }
 
   const isMaster = await checkIsMasterUser()
-  return <Header isMaster={isMaster} />
+
+  return (
+    <HeaderServer
+      isMaster={isMaster}
+      user={{
+        email: user.email,
+        name: user.name,
+      }}
+    />
+  )
 }

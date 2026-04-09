@@ -1,6 +1,6 @@
 // Learn more: https://github.com/testing-library/jest-dom
-import '@testing-library/jest-dom'
 import { TextDecoder, TextEncoder } from 'util'
+import '@testing-library/jest-dom'
 
 // Polyfill TextEncoder/TextDecoder for Jest environment
 Object.assign(global, {
@@ -9,8 +9,17 @@ Object.assign(global, {
 })
 
 // Polyfill Fetch API for Jest environment
+/**
+ *
+ */
 global.Request = class Request {} as any
+/**
+ *
+ */
 global.Response = class Response {} as any
+/**
+ *
+ */
 global.Headers = class Headers {} as any
 
 // Mock Next.js modules
@@ -58,6 +67,10 @@ jest.mock('@/lib/auth-helpers', () => ({
 // Suppress console errors during tests
 const originalError = console.error
 beforeAll(() => {
+  /**
+   *
+   * @param {...any} args
+   */
   console.error = (...args: any[]) => {
     // Suppress jsdom navigation errors
     if (

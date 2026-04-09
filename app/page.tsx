@@ -5,6 +5,9 @@ import { QuotationList } from '@/components/quotation/QuotationList'
 
 import { getQuotations } from './quotations/actions'
 
+// Force dynamic rendering because this page uses authentication
+export const dynamic = 'force-dynamic'
+
 /**
  * HomePage
  */

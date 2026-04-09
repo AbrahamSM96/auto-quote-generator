@@ -55,6 +55,8 @@
     "babel-config.js",
     "toCamelCase.ts",
     "jest.config.js",
+    "jest.setup.ts",
+    "tailwind.config.ts",
   ],
   "overrides": [
     {
